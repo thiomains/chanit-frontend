@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+:root {
+    --bg-light: hsl(240, 53%, 15%);
+    --bg: hsl(240, 53%, 10%);
+    --bg-dark: hsl(240, 53%, 5%);
+    --bg-red: hsl(0, 53%, 80%);
+    --bg-green: hsl(140, 53%, 80%);
+    --text-primary: hsl(240, 53%, 95%);
+    --text-secondary: hsl(240, 53%, 90%);
+    --text-red: hsl(0, 53%, 40%);
+    --text-green: hsl(140, 53%, 40%);
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+}
