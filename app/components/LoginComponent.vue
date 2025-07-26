@@ -1,66 +1,86 @@
-<script setup>
+<script setup lang="ts">
+import * as v from 'valibot'
+import type {FormSubmitEvent} from '@nuxt/ui'
 
-const { $axios } = useNuxtApp()
+const config = useRuntimeConfig()
 
-let mailAddress = ref('')
-let password = ref('')
+const schema = v.object({
+  email: v.pipe(v.string(), v.email('Invalid email')),
+  password: v.pipe(v.string(), v.minLength(8, 'Must be at least 8 characters'))
+})
 
-let error = ref('')
+type Schema = v.InferOutput<typeof schema>
 
-async function login() {
+const state = reactive({
+  email: '',
+  password: ''
+})
 
-  if (mailAddress.value === '') {
-    error.value = 'Please enter an email address.';
-    return;
-  }
+const toast = useToast()
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  toast.add({ title: 'Success', description: 'The form has been submitted.', color: 'success' })
+  await login(event.data.email, event.data.password)
+}
 
-  if (password.value === '') {
-    error.value = 'Please enter a password.';
-    return;
-  }
+async function login(email: string, password: string) {
 
   try {
-    const res = await $axios.post('/auth/login', {
-      email: mailAddress.value,
-      password: password.value
+    const res = await $fetch(config.public.apiBaseUrl + '/auth/login', {
+      method: "POST",
+      body: {
+        email: email,
+        password: password
+      },
+      raw: true
     })
-
-    if (res.status !== 200) {
-      error.value = res.data.error;
-      return;
-    }
 
     await navigateTo('/app')
   } catch (e) {
-    error.value = e.response.data.error;
+    const error = e as any
+    console.log(error.data.error)
   }
 }
 
 async function faserLogin() {
-  // TODO in die env
-  window.location.href = "https://faser.app/oauth/?client_id=a730mf1oeiuof3rbbec1z&redirect_uri=https://yoghurt.minescope.eu/auth&scopes=69"
+  window.location.href = "https://faser.app/oauth/?client_id=a730mf1oeiuof3rbbec1z&redirect_uri=" + window.location.origin + "/auth&scopes=69"
 }
 
 
 </script>
 
 <template>
-  <h1 class="text-[var(--text-primary)] text-2xl font-bold leading-none">Log In</h1>
-  <div class="w-full my-4 flex flex-col gap-2">
-    <p v-if="error !== ''" class="text-[var(--text-red)] underline">{{ error }}</p>
-    <div>
-      <h3 class="text-[var(--text-secondary)]">E-Mail</h3>
-      <input class="border-[var(--text-secondary)] border-2 rounded-lg text-[var(--text-secondary)] p-2" type="text" v-model="mailAddress">
-    </div>
-    <div>
-      <h3 class="text-[var(--text-secondary)]">Password</h3>
-      <input class="border-[var(--text-secondary)] border-2 rounded-lg text-[var(--text-secondary)] p-2" type="password" v-model="password">
-    </div>
-  </div>
-  <button @click="login" class="cursor-pointer text-[var(--text-primary)] font-bold text-center w-full bg-[var(--bg-light)] p-2 rounded-lg">Log In</button>
-  <button @click="faserLogin" class="cursor-pointer text-[var(--text-primary)] font-bold text-center w-full bg-[var(--bg-light)] p-2 rounded-lg mt-2 flex items-center gap-2">
-    <img class="rounded-sm" src="https://cdn.faser.app/static/logo.png?size=32" alt="">Log in with faser
-  </button>
+
+  <UCard variant="subtle">
+    <template #header>
+      <h1 class="text-2xl">Log In</h1>
+    </template>
+
+    <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
+      <UFormField label="Email" name="email">
+        <UInput v-model="state.email" />
+      </UFormField>
+
+      <UFormField label="Password" name="password">
+        <UInput v-model="state.password" type="password" />
+      </UFormField>
+
+      <UButton type="submit" label="Log in" block/>
+
+    </UForm>
+
+    <USeparator class="my-2" label="or" />
+
+    <UButton
+        @click="faserLogin"
+        variant="subtle"
+        :avatar="{
+            src: 'https://cdn.faser.app/static/logo.png?size=32'
+          }"
+        label="Log in with faser.app"
+        block
+    />
+
+  </UCard>
 </template>
 
 <style scoped>
