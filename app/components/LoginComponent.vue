@@ -37,7 +37,8 @@ async function login() {
 }
 
 async function faserLogin() {
-  window.location.href = "https://faser.app/oauth/?client_id=a730mf1oeiuof3rbbec1z&redirect_uri=http://localhost:3000/auth&scopes=69"
+  // TODO in die env
+  window.location.href = "https://faser.app/oauth/?client_id=a730mf1oeiuof3rbbec1z&redirect_uri=https://yoghurt.minescope.eu/auth&scopes=69"
 }
 
 
