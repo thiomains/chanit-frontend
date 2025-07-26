@@ -41,11 +41,11 @@ async function addFriend() {
 
 <template>
   <div class="flex items-center gap-2">
-    <span :class="{ 'opacity-0': collapsed }" @click="collapse" class="material-symbols-outlined select-none transition-friend-add">close</span>
+    <UIcon name="material-symbols:close" :class="{ 'opacity-0': collapsed }" @click="collapse" class="material-symbols-outlined select-none transition-friend-add size-6" />
     <div :class="{ 'p-2': !collapsed, 'gap-1': !collapsed, 'cursor-pointer': !collapsed, 'h-16': !collapsed, 'h-12': collapsed }" class="bg-[var(--bg)] rounded-full items-center justify-center flex select-none transition-friend-add">
       <input :class="{ 'w-0': collapsed, 'w-32': !collapsed, 'p-2': !collapsed, 'opacity-0': collapsed }" class="h-12 rounded-full transition-friend-add" type="text" placeholder="Add a friend" autocomplete="false" name="search" v-model="username">
       <div @click="addFriend" :class="{ 'w-12': !collapsed, 'w-26': collapsed, 'bg-[var(--bg-light)]': !collapsed, 'bg-[var(--bg)]': collapsed }" class="h-12 w-12 aspect-square rounded-full items-center justify-center flex cursor-pointer select-none transition-friend-add">
-        <span class="material-symbols-outlined">person_add</span>
+        <UIcon name="material-symbols:person-add" class="size-6" />
       </div>
     </div>
   </div>

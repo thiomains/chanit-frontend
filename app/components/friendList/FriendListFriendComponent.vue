@@ -27,8 +27,8 @@ async function removeFriendClick() {
     <img class="aspect-square h-12 rounded-full"
          src="https://images.dog.ceo/breeds/retriever-chesapeake/n02099849_2153.jpg" alt="dog">
     <p class="w-full">{{ props.friend.user.username }}</p>
-    <CircleButtonComponent icon="chat" @click="chatClick" />
-    <CircleButtonComponent icon="person_off" @click="removeFriendClick"/>
+    <CircleButtonComponent icon="material-symbols:chat" @click="chatClick" />
+    <CircleButtonComponent icon="material-symbols:person-off" @click="removeFriendClick"/>
   </div>
 </template>
 
