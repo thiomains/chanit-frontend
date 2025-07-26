@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-    --bg-light: hsl(240, 53%, 15%);
-    --bg: hsl(240, 53%, 10%);
+    --bg-light: hsl(240, 53%, 25%);
+    --bg: hsl(240, 53%, 15%);
     --bg-dark: hsl(240, 53%, 5%);
     --bg-red: hsl(0, 53%, 80%);
     --bg-green: hsl(140, 53%, 80%);
@@ -15,4 +15,12 @@
 body {
     background-color: var(--bg-dark);
     color: var(--text-primary);
+}
+
+input::placeholder {
+    color: var(--text-secondary)
+}
+
+textarea:focus, input:focus{
+    outline: none;
 }

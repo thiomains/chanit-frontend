@@ -36,6 +36,10 @@ async function login() {
   }
 }
 
+async function faserLogin() {
+  window.location.href = "https://faser.app/oauth/?client_id=a730mf1oeiuof3rbbec1z&redirect_uri=http://localhost:3000/auth&scopes=69"
+}
+
 
 </script>
 
@@ -53,6 +57,9 @@ async function login() {
     </div>
   </div>
   <button @click="login" class="cursor-pointer text-[var(--text-primary)] font-bold text-center w-full bg-[var(--bg-light)] p-2 rounded-lg">Log In</button>
+  <button @click="faserLogin" class="cursor-pointer text-[var(--text-primary)] font-bold text-center w-full bg-[var(--bg-light)] p-2 rounded-lg mt-2 flex items-center gap-2">
+    <img class="rounded-sm" src="https://cdn.faser.app/static/logo.png?size=32" alt="">Log in with faser
+  </button>
 </template>
 
 <style scoped>

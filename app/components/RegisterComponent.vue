@@ -63,7 +63,7 @@ async function register() {
       <input class="border-[var(--text-secondary)] border-2 rounded-lg text-[var(--text-secondary)] p-2" type="password" v-model="password">
     </div>
   </div>
-  <button @click="register" class="cursor-pointer text-[var(--text-secondary)] text-center w-full bg-[var(--bg-light)] p-2 rounded-lg">Create your account</button>
+  <button @click="register" class="font-bold cursor-pointer text-[var(--text-secondary)] text-center w-full bg-[var(--bg-light)] p-2 rounded-lg">Create your account</button>
 </template>
 
 <style scoped>
