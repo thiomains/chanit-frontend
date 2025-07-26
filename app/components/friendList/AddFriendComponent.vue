@@ -26,6 +26,9 @@ async function addFriend() {
       }
     })
     console.log(res)
+
+    collapsed.value = true
+    username.value = ""
   } catch (e) {
     console.log(e)
   }
