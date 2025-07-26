@@ -1,69 +1,93 @@
-<script setup>
+<script setup lang="ts">
 
-const { $axios } = useNuxtApp()
+import * as v from 'valibot'
+import type {FormSubmitEvent} from '@nuxt/ui'
 
-let username = ref('')
-let mailAddress = ref('')
-let password = ref('')
+const config = useRuntimeConfig()
 
-let error = ref('')
+const schema = v.object({
+  username: v.pipe(v.string(), v.minLength(3, 'Must be at least 3 characters'), v.maxLength(16, 'Must be no longer than 16 characters')),
+  email: v.pipe(v.string(), v.email('Invalid email')),
+  password: v.pipe(v.string(), v.minLength(8, 'Must be at least 8 characters'))
+})
 
-async function register() {
+type Schema = v.InferOutput<typeof schema>
 
-  if (username.value === '') {
-    error.value = 'Please enter an username.';
-    return;
-  }
+const state = reactive({
+  username: '',
+  email: '',
+  password: ''
+})
 
-  if (mailAddress.value === '') {
-    error.value = 'Please enter an email address.';
-    return;
-  }
+const toast = useToast()
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  toast.add({ title: 'Success', description: 'The form has been submitted.', color: 'success' })
+  await register(event.data.username, event.data.email, event.data.password)
+}
 
-  if (password.value === '') {
-    error.value = 'Please enter a password.';
-    return;
-  }
+async function register(username: string, email: string, password: string) {
 
   try {
-    const res = await $axios.post('/auth/register', {
-      username: username.value,
-      email: mailAddress.value,
-      password: password.value
+    const res = await $fetch(config.public.apiBaseUrl + '/auth/register', {
+      method: "POST",
+      body: {
+        username: username,
+        email: email,
+        password: password
+      }
     })
-
-    if (res.status !== 201) {
-      error.value = res.data.error;
-      return;
-    }
 
     await navigateTo('/app')
   } catch (e) {
-    error.value = e.response.data.error;
+    const error = e as any
+    console.log(error.data.error)
   }
+}
 
+async function faserLogin() {
+  window.location.href = "https://faser.app/oauth/?client_id=a730mf1oeiuof3rbbec1z&redirect_uri=" + window.location.origin + "/auth&scopes=69"
 }
 
 </script>
 
 <template>
-  <h1 class="text-[var(--text-primary)] text-2xl font-bold leading-none">Register</h1>
-  <div class="w-full my-4 flex flex-col gap-2">
-    <p v-if="error !== ''" class="text-[var(--text-red)] underline">{{ error }}</p>
-    <div>
-      <h3 class="text-[var(--text-secondary)]">Username</h3>
-      <input class="border-[var(--text-secondary)] border-2 rounded-lg text-[var(--text-secondary)] p-2" type="text" v-model="username">
-    </div>
-    <div>
-      <h3 class="text-[var(--text-secondary)]">E-Mail</h3>
-      <input class="border-[var(--text-secondary)] border-2 rounded-lg text-[var(--text-secondary)] p-2" type="email" v-model="mailAddress">
-    </div>
-    <div>
-      <h3 class="text-[var(--text-secondary)]">Password</h3>
-      <input class="border-[var(--text-secondary)] border-2 rounded-lg text-[var(--text-secondary)] p-2" type="password" v-model="password">
-    </div>
-  </div>
-  <button @click="register" class="font-bold cursor-pointer text-[var(--text-secondary)] text-center w-full bg-[var(--bg-light)] p-2 rounded-lg">Create your account</button>
+
+  <UCard variant="subtle">
+    <template #header>
+      <h1 class="text-2xl">Register</h1>
+    </template>
+
+    <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
+      <UFormField label="Username" name="username">
+        <UInput v-model="state.username" />
+      </UFormField>
+
+      <UFormField label="Email" name="email">
+        <UInput v-model="state.email" />
+      </UFormField>
+
+      <UFormField label="Password" name="password">
+        <UInput v-model="state.password" type="password" />
+      </UFormField>
+
+      <UButton type="submit" label="Create your account" block/>
+
+    </UForm>
+
+    <USeparator class="my-2" label="or" />
+
+    <UButton
+        @click="faserLogin"
+        variant="subtle"
+        :avatar="{
+            src: 'https://cdn.faser.app/static/logo.png?size=32'
+          }"
+        label="Log in with faser.app"
+        block
+    />
+
+  </UCard>
+
 </template>
 
 <style scoped>

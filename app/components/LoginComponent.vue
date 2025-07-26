@@ -30,8 +30,7 @@ async function login(email: string, password: string) {
       body: {
         email: email,
         password: password
-      },
-      raw: true
+      }
     })
 
     await navigateTo('/app')
