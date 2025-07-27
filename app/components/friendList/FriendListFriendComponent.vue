@@ -2,14 +2,18 @@
 const { $axios } = useNuxtApp()
 const props = defineProps(['friend'])
 const session = useState('session')
+const { $checkToken } = useNuxtApp()
 
 async function chatClick() {
   await navigateTo({
-    path: '/channel/direct-message/' + props.friend.user.userId
+    path: '/channel/' + props.friend.directChannelId
   })
 }
 
 async function removeFriendClick() {
+
+  if (!$checkToken()) return
+
   const res = await $axios.delete('/user/' + props.friend.user.userId + '/friends', {
     headers: {
       Authorization: `Bearer ${session.value.session.accessToken}`,

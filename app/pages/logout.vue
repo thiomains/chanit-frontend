@@ -12,7 +12,9 @@ onMounted(async () => {
 
     session.value = {}
 
-    console.log(res)
+    await navigateTo({
+      path: "/login"
+    })
   } catch (e) {
     const error = e as any;
     console.log(error)

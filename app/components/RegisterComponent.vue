@@ -4,6 +4,7 @@ import * as v from 'valibot'
 import type {FormSubmitEvent} from '@nuxt/ui'
 
 const config = useRuntimeConfig()
+const { $checkToken } = useNuxtApp()
 
 const schema = v.object({
   username: v.pipe(v.string(), v.minLength(3, 'Must be at least 3 characters'), v.maxLength(16, 'Must be no longer than 16 characters')),
@@ -34,10 +35,12 @@ async function register(username: string, email: string, password: string) {
         username: username,
         email: email,
         password: password
-      }
+      },
+      credentials: "include"
     })
 
-    await navigateTo('/app')
+    await $checkToken()
+    await navigateTo('/')
   } catch (e) {
     const error = e as any
     console.log(error.data.error)

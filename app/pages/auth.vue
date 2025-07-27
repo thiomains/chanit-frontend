@@ -18,7 +18,7 @@ onMounted( async () => {
 
   if (res.status === 200 || res.status === 201) {
     navigateTo({
-      path: '/app'
+      path: '/'
     })
   }
 })

@@ -3,6 +3,7 @@ import * as v from 'valibot'
 import type {FormSubmitEvent} from '@nuxt/ui'
 
 const config = useRuntimeConfig()
+const { $checkToken } = useNuxtApp()
 
 const schema = v.object({
   email: v.pipe(v.string(), v.email('Invalid email')),
@@ -18,7 +19,6 @@ const state = reactive({
 
 const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  toast.add({ title: 'Success', description: 'The form has been submitted.', color: 'success' })
   await login(event.data.email, event.data.password)
 }
 
@@ -30,13 +30,16 @@ async function login(email: string, password: string) {
       body: {
         email: email,
         password: password
-      }
+      },
+      credentials: "include"
     })
 
-    await navigateTo('/app')
+    await $checkToken()
+    await navigateTo('/')
   } catch (e) {
     const error = e as any
     console.log(error.data.error)
+    toast.add({ title: 'Login failed', description: error.data.error, color: 'error' })
   }
 }
 
