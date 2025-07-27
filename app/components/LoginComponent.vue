@@ -78,7 +78,7 @@ async function faserLogin() {
         :avatar="{
             src: 'https://cdn.faser.app/static/logo.png?size=32'
           }"
-        label="Log in with faser.app"
+        label="Log in with faser"
         block
     />
 
