@@ -3,9 +3,9 @@
 </script>
 
 <template>
-  <div class="flex">
+  <div class="flex max-h-screen max-w-screen">
     <ServerListComponent />
-    <slot />
+    <slot class="h-full w-full" />
   </div>
 </template>
 
