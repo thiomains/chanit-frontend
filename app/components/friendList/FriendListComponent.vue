@@ -21,7 +21,7 @@ async function loadFriends() {
   friendsLoaded.value = true
 }
 
-nuxtApp.hook('app:session:refresh', () => {
+onMounted(() => {
   loadFriends()
 })
 

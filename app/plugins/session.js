@@ -40,10 +40,6 @@ export default defineNuxtPlugin(async () => {
             await refreshUser()
         }
 
-        if (sessionValid) {
-            await nuxtApp.callHook("app:session:refresh", {})
-        }
-
         return sessionValid;
     }
 
