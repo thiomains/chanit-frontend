@@ -70,7 +70,7 @@ async function messageSent(message) {
     </UCard>
     <div class="flex flex-col gap-2 my-4 overflow-y-scroll">
       <div v-for="message in messages">
-        <TextMessageComponent :message="message" />
+        <TextMessageComponent :message="message" :key="message.messageId"/>
       </div>
     </div>
     <TextChannelInputComponent @message-sent="messageSent" />
