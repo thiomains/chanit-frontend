@@ -54,6 +54,8 @@ let messages = ref([])
 
 async function messageSent(message) {
   message.pending = true;
+  message.author = session.value.user
+  message.messageId = 0
   messages.value.push(message)
   await fetchMessages()
 }
