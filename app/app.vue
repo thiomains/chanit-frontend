@@ -20,7 +20,7 @@ onMounted( async () => {
   <div v-else>
     <UApp>
       <NuxtLayout>
-        <NuxtPage />
+        <NuxtPage class="h-full w-full" />
       </NuxtLayout>
     </UApp>
   </div>

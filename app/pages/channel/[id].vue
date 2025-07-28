@@ -63,19 +63,23 @@ async function messageSent(message) {
 </script>
 
 <template>
-  <div class="p-2">
-    <UCard variant="subtle">
-      <div class="flex items-center gap-2">
-        <UAvatar src="https://images.dog.ceo/breeds/puggle/IMG_075018.jpg" />
-        <p class="font-bold">{{ channelName }}</p>
+  <div class="w-full h-full flex gap-2 ">
+    <div class="w-full h-full flex flex-col">
+      <UCard variant="subtle">
+        <div class="flex items-center gap-2">
+          <UAvatar src="https://images.dog.ceo/breeds/puggle/IMG_075018.jpg" />
+          <p class="font-bold">{{ channelName }}</p>
+        </div>
+      </UCard>
+      <div ref="chatContainer" class="flex-1 overflow-y-scroll px-4 flex flex-col gap-2" >
+        <TextMessageComponent :message="message" :key="message.messageId" v-for="message in messages"/>
+        <div ref="chatEnd"></div>
       </div>
-    </UCard>
-    <div class="flex flex-col gap-2 my-4 overflow-y-scroll">
-      <div v-for="message in messages">
-        <TextMessageComponent :message="message" :key="message.messageId"/>
-      </div>
+      <TextChannelInputComponent @message-sent="messageSent" />
     </div>
-    <TextChannelInputComponent @message-sent="messageSent" />
+    <div>
+      <USkeleton class="w-xs h-full" />
+    </div>
   </div>
 </template>
 
