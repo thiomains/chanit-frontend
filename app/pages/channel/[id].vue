@@ -56,7 +56,7 @@ async function messageSent(message) {
   message.pending = true;
   message.author = session.value.user
   message.messageId = 0
-  messages.value.push(message)
+  messages.value.unshift(message)
   await fetchMessages()
 }
 
@@ -71,9 +71,8 @@ async function messageSent(message) {
           <p class="font-bold">{{ channelName }}</p>
         </div>
       </UCard>
-      <div ref="chatContainer" class="flex-1 overflow-y-scroll px-4 flex flex-col gap-2" >
+      <div class="flex-1 overflow-y-scroll px-4 flex flex-col-reverse gap-2" >
         <TextMessageComponent :message="message" :key="message.messageId" v-for="message in messages"/>
-        <div ref="chatEnd"></div>
       </div>
       <TextChannelInputComponent @message-sent="messageSent" />
     </div>
