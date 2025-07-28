@@ -2,6 +2,7 @@
 
 const { $axios } = useNuxtApp()
 const route = useRoute()
+const { $checkToken } = useNuxtApp()
 
 onMounted( async () => {
   const code = route.query.code
@@ -15,6 +16,8 @@ onMounted( async () => {
   const res = await $axios.post('/auth/faser', {
     code: code
   })
+
+  await $checkToken()
 
   if (res.status === 200 || res.status === 201) {
     navigateTo({

@@ -6,7 +6,8 @@ const route = useRoute()
 let showLoading = ref(true)
 
 onMounted( async () => {
-  await $checkToken()
+  if (route.path !== "/auth")
+    await $checkToken()
   showLoading.value = false
   setInterval(() => {
     if (route.path !== "/login") $checkToken()
