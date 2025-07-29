@@ -9,8 +9,6 @@ definePageMeta({
 
 <template>
 
-  <h1>{{ session }}</h1>
-
   <FriendListComponent />
 
 </template>
