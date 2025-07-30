@@ -10,6 +10,7 @@ interface Friend {
   directChannelId: string
   user: {
     username: string
+    userId: string
   }
 }
 
@@ -40,7 +41,7 @@ onMounted(() => {
       <div class="h-12 items-center p-2">
         <p class="font-bold">All Friends - {{ friends.length }}</p>
       </div>
-      <div v-for="friend in friends">
+      <div v-for="friend in friends" :key="friend.user.userId">
         <USeparator />
         <div class="items-center p-2 py-4 flex gap-2">
           <UAvatar src="https://images.dog.ceo/breeds/dingo/n02115641_1380.jpg" size="3xl"/>
