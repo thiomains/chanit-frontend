@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 definePageMeta({
   layout: 'sidebar'
 })
@@ -69,11 +69,10 @@ onMounted(async () => {
 })
 
 function isGrouped(message, previousMessage) {
-  let group = true
-  if (!previousMessage) group = false
-  if (message.author.userId !== previousMessage.author.userId) group = false
-  if (Math.abs(message.createdAt - previousMessage.createdAt) > 5 * 60 * 1000) group = false
-  return group
+  if (!previousMessage) return false
+  if (message.author.userId !== previousMessage.author.userId) return false
+  if (Math.abs(message.createdAt - previousMessage.createdAt) > 5 * 60 * 1000) return
+  return true
 }
 
 </script>
