@@ -1,54 +1,50 @@
-<script setup>
+<script setup lang="ts">
 
-const { $axios } = useNuxtApp()
-const session = useState('session', () => null)
-
-let collapsed = ref(true)
-let username = ref("")
-
-function collapse() {
-  collapsed.value = true
-}
+const sessionState = useState('session') as any
+const nuxtApp = useNuxtApp()
+const config = useRuntimeConfig()
 
 async function addFriend() {
-  if (collapsed.value) {
-    collapsed.value = false
-    return;
-  }
-
-  console.log("ee")
-
+  let name = username.value
+  name = name.trim()
+  if (name === "") return
+  addFriendsDisabled.value = true
   try {
-    const res = await $axios.post('/user/' + username.value + '/friends', {}, {
+    const res = await $fetch(config.public.apiBaseUrl + "/user/" + name + "/friends", {
+      method: "POST",
       headers: {
-        Authorization: `Bearer ${session.value.session.accessToken}`,
-        Session: session.value.session.sessionId
+        Authorization: `Bearer ${sessionState.value.session.accessToken}`,
+        Session: sessionState.value.session.sessionId
       }
     })
-    console.log(res)
 
-    collapsed.value = true
     username.value = ""
+    addFriendsDisabled.value = false
+    errorMessage.value = res.message
+    messageColor.value = "text-success"
   } catch (e) {
-    console.log(e)
+    const error = e as any
+    addFriendsDisabled.value = false
+    errorMessage.value = e.data.error
+    messageColor.value = "text-error"
   }
-
-
-
 }
+
+let username = ref("")
+let addFriendsDisabled = ref(false)
+let messageColor = ref("text")
+let errorMessage = ref("")
 
 </script>
 
 <template>
-  <div class="flex items-center gap-2">
-    <UIcon name="material-symbols:close" :class="{ 'opacity-0': collapsed }" @click="collapse" class="material-symbols-outlined select-none transition-friend-add size-6" />
-    <div :class="{ 'p-2': !collapsed, 'gap-1': !collapsed, 'cursor-pointer': !collapsed, 'h-16': !collapsed, 'h-12': collapsed }" class="bg-[var(--bg)] rounded-full items-center justify-center flex select-none transition-friend-add">
-      <input :class="{ 'w-0': collapsed, 'w-32': !collapsed, 'p-2': !collapsed, 'opacity-0': collapsed }" class="h-12 rounded-full transition-friend-add" type="text" placeholder="Add a friend" autocomplete="false" name="search" v-model="username">
-      <div @click="addFriend" :class="{ 'w-12': !collapsed, 'w-26': collapsed, 'bg-[var(--bg-light)]': !collapsed, 'bg-[var(--bg)]': collapsed }" class="h-12 w-12 aspect-square rounded-full items-center justify-center flex cursor-pointer select-none transition-friend-add">
-        <UIcon name="material-symbols:person-add" class="size-6" />
-      </div>
-    </div>
-  </div>
+  <UCard>
+    <UButtonGroup class="w-full" size="lg">
+      <UInput class="w-full" color="primary" placeholder="Enter a username..." v-model="username" autocomplete="off"/>
+      <UButton :disabled="addFriendsDisabled" @click="addFriend" label="Add Friend" icon="material-symbols:person-add" />
+    </UButtonGroup>
+    <p class="mt-4" :class="messageColor" >{{ errorMessage }}</p>
+  </UCard>
 </template>
 
 <style scoped>

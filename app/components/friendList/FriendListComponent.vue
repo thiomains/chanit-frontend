@@ -4,8 +4,7 @@ import AddFriendComponent from "~/components/friendList/AddFriendComponent.vue";
 import type { TabsItem } from '@nuxt/ui'
 import AllFriendsListComponent from "~/components/friendList/AllFriendsListComponent.vue";
 
-const {$axios} = useNuxtApp()
-const sessionState = useState('session')
+const sessionState = useState('session') as any
 const nuxtApp = useNuxtApp()
 const config = useRuntimeConfig()
 
@@ -45,7 +44,7 @@ const items = ref<TabsItem[]>([
       <AllFriendsListComponent />
     </template>
     <template #friendRequests="{ item }">
-
+      <AddFriendComponent/>
     </template>
   </UTabs>
 </template>
