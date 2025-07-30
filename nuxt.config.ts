@@ -12,7 +12,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.API_BASE_URL
+      apiBaseUrl: process.env.API_BASE_URL,
+      webSocketUrl: process.env.WEBSOCKET_URL
     }
   },
   modules: ['@nuxt/ui']

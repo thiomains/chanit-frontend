@@ -1,14 +1,21 @@
 <script setup>
 const session = useState("session")
-const { $checkToken } = useNuxtApp()
+const { $checkToken, $connectWebsocket } = useNuxtApp()
 const route = useRoute()
 
 let showLoading = ref(true)
 
-onMounted( async () => {
-  if (route.path !== "/auth")
-    await $checkToken()
+async function prepare() {
+  if (route.path !== "/auth") {
+    if (await $checkToken())
+      await $connectWebsocket()
+  }
+
   showLoading.value = false
+}
+
+onMounted( async () => {
+  await prepare()
   setInterval(() => {
     if (route.path !== "/login") $checkToken()
   }, 60000)
