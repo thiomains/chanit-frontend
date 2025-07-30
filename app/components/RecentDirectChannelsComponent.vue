@@ -38,11 +38,14 @@ onMounted(async () => {
 })
 
 function subtitle(channel: RecentChannel) {
-  if (!channel.lastMessage) return ""
+  if (!channel.lastMessage?.messageId) return " "
   let text = channel.lastMessage.author.username + ": "
   text = text + channel.lastMessage.body
-  text = text.substring(0, 28)
-  text = text + "..."
+  const truncate = text.length > 28
+  if (truncate) {
+    text = text.substring(0, 28)
+    text = text + "..."
+  }
   return text
 }
 
@@ -54,7 +57,7 @@ let loaded = ref(false)
 <template>
   <div v-if="loaded">
     <UButton
-        class="flex-row text-start items-center justify-start"
+        class="flex-row text-start items-center justify-start gap-2"
         v-for="channel of data"
         :key="channel.lastMessage?.messageId || channel.channelId"
         :to="'/channel/' + channel.channelId"
