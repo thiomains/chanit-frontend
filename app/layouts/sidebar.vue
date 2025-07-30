@@ -1,5 +1,6 @@
 <script setup lang="ts">
 
+import SidebarChannelSelectComponent from "~/components/SidebarChannelSelectComponent.vue";
 </script>
 
 <template>
@@ -11,7 +12,7 @@
       <USkeleton class="w-20 h-full" />
     </div>
     <div class="w-xs h-full shrink-0">
-      <USkeleton class="w-xs h-full" />
+      <SidebarChannelSelectComponent class="w-full h-full"/>
     </div>
     <div class="h-full w-full shrink">
       <slot />
