@@ -43,7 +43,7 @@ onMounted(() => {
       </div>
       <div v-for="friend in friends" :key="friend.user.userId">
         <USeparator />
-        <div class="items-center p-2 py-4 flex gap-2">
+        <div class="items-center p-2 py-4 flex gap-2 transition-colors hover:bg-muted rounded-lg">
           <UAvatar src="https://images.dog.ceo/breeds/dingo/n02115641_1380.jpg" size="3xl"/>
           <div class="flex flex-col flex-1">
             <p class="font-bold">{{ friend.user.username }}</p>
