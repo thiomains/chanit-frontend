@@ -89,7 +89,7 @@ function isGrouped(message, previousMessage) {
       <div class="flex-1 overflow-y-scroll flex flex-col-reverse" >
         <TextMessageComponent :grouped="isGrouped(message, messages[i+1])" :message="message" :key="message.messageId" v-for="( message, i ) in messages"/>
       </div>
-      <TextChannelInputComponent @message-sent="messageSent" />
+      <TextChannelInputComponent />
     </div>
     <div>
       <USkeleton class="w-xs h-full" />
