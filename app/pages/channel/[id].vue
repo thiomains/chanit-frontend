@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   layout: 'sidebar'
 })
@@ -6,7 +6,7 @@ definePageMeta({
 const config = useRuntimeConfig()
 const route = useRoute()
 const session = useState('session')
-const {$checkToken, $connectWebsocket} = useNuxtApp()
+const { $connectWebsocket } = useNuxtApp()
 
 
 onMounted(async () => {
@@ -68,6 +68,13 @@ onMounted(async () => {
   })
 })
 
+function isGrouped(message, previousMessage) {
+  let group = true
+  if (!previousMessage) group = false
+  if (message.author.userId !== previousMessage.author.userId) group = false
+  if (Math.abs(message.createdAt - previousMessage.createdAt) > 5 * 60 * 1000) group = false
+  return group
+}
 
 </script>
 
@@ -80,8 +87,8 @@ onMounted(async () => {
           <p class="font-bold">{{ channelName }}</p>
         </div>
       </UCard>
-      <div class="flex-1 overflow-y-scroll px-4 flex flex-col-reverse gap-2" >
-        <TextMessageComponent :message="message" :key="message.messageId" v-for="message in messages"/>
+      <div class="flex-1 overflow-y-scroll flex flex-col-reverse" >
+        <TextMessageComponent :grouped="isGrouped(message, messages[i+1])" :message="message" :key="message.messageId" v-for="( message, i ) in messages"/>
       </div>
       <TextChannelInputComponent @message-sent="messageSent" />
     </div>

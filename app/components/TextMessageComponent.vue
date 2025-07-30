@@ -1,14 +1,17 @@
 <script setup lang="ts">
-const props = defineProps(["message"])
-const message = props.message
+const props = defineProps(["message", "grouped"])
+const message = ref(props.message)
+const grouped = ref(props.grouped)
 
 </script>
 
 <template>
-  <div class="flex gap-2">
-    <UAvatar src="https://images.dog.ceo/breeds/doberman/n02107142_5570.jpg" size="xl" />
+  <div class="flex gap-4 hover:bg-[var(--ui-bg-muted)] py-0.5 px-4" :class="{ 'mt-4': !grouped }">
+    <div class="w-10">
+      <UAvatar v-if="!grouped" src="https://images.dog.ceo/breeds/doberman/n02107142_5570.jpg" size="xl" />
+    </div>
     <div>
-      <p class="font-bold">{{ message.author.username }}</p>
+      <p v-if="!grouped" class="font-bold">{{ message.author.username }}</p>
       <p>{{ message.body }}</p>
     </div>
   </div>
