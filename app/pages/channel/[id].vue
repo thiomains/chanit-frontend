@@ -6,7 +6,8 @@ definePageMeta({
 const config = useRuntimeConfig()
 const route = useRoute()
 const session = useState('session')
-const {$checkToken} = useNuxtApp()
+const {$checkToken, $connectWebsocket} = useNuxtApp()
+
 
 onMounted(async () => {
 
@@ -21,7 +22,7 @@ onMounted(async () => {
 
     if (res.channel.channelType === "direct-message") {
       let members = res.channel.directMessageChannel.members
-      members.splice(members.indexOf(session.value.user))
+      members.splice(members.indexOf(session.value.user), 1)
       channelName.value = members[0]
     }
 
@@ -52,13 +53,21 @@ let channelName = ref('')
 
 let messages = ref([])
 
-async function messageSent(message) {
-  message.pending = true;
-  message.author = session.value.user
-  message.messageId = 0
-  messages.value.unshift(message)
-  await fetchMessages()
-}
+onMounted(async () => {
+  const ws = await $connectWebsocket()
+  ws.send(JSON.stringify({
+    type: "view-channel",
+    channelId: route.params.id
+  }))
+  ws.addEventListener("message", () => {
+    const message = JSON.parse(event.data)
+    if (message.type !== "message") return
+    const receivedMessage = message.message
+    if (receivedMessage.channelId !== route.params.id) return
+    messages.value.unshift(receivedMessage)
+  })
+})
+
 
 </script>
 
