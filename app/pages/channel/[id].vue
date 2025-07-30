@@ -85,8 +85,6 @@ function isSameDay(message, previousMessage) {
       'yyyy-MM-dd'
   )
 
-  console.log(currentDate, previousDate)
-
   return currentDate === previousDate
 }
 

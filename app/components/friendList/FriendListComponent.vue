@@ -3,6 +3,7 @@
 import AddFriendComponent from "~/components/friendList/AddFriendComponent.vue";
 import type { TabsItem } from '@nuxt/ui'
 import AllFriendsListComponent from "~/components/friendList/AllFriendsListComponent.vue";
+import FriendRequestsComponent from "~/components/friendList/FriendRequestsComponent.vue";
 
 const sessionState = useState('session') as any
 const nuxtApp = useNuxtApp()
@@ -31,22 +32,24 @@ const items = ref<TabsItem[]>([
 </script>
 
 <template>
+  <div class="flex-col flex h-full justify-between">
+    <UCard variant="subtle" class="shrink-0">
+      <p class="text-xl font-bold">Friends</p>
+    </UCard>
 
-  <UCard variant="subtle">
-    <p class="text-xl font-bold">Friends</p>
-  </UCard>
+    <UTabs :items="items" class="w-full mt-2 flex-1 overflow-auto" :ui="{ content: 'focus:outline-none w-full overflow-auto' }">
+      <template #onlineFriends="{ item }">
 
-  <UTabs :items="items" class="w-full mt-2">
-    <template #onlineFriends="{ item }">
-
-    </template>
-    <template #allFriends="{ item }">
-      <AllFriendsListComponent />
-    </template>
-    <template #friendRequests="{ item }">
-      <AddFriendComponent/>
-    </template>
-  </UTabs>
+      </template>
+      <template #allFriends="{ item }">
+        <AllFriendsListComponent />
+      </template>
+      <template #friendRequests="{ item }">
+        <AddFriendComponent/>
+        <FriendRequestsComponent/>
+      </template>
+    </UTabs>
+  </div>
 </template>
 
 <style scoped>

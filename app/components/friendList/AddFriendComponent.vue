@@ -16,7 +16,7 @@ async function addFriend() {
         Authorization: `Bearer ${sessionState.value.session.accessToken}`,
         Session: sessionState.value.session.sessionId
       }
-    })
+    }) as any
 
     username.value = ""
     addFriendsDisabled.value = false
@@ -25,7 +25,7 @@ async function addFriend() {
   } catch (e) {
     const error = e as any
     addFriendsDisabled.value = false
-    errorMessage.value = e.data.error
+    errorMessage.value = error.data.error
     messageColor.value = "text-error"
   }
 }
@@ -38,19 +38,16 @@ let errorMessage = ref("")
 </script>
 
 <template>
-  <UCard>
+  <UCard class="m-1">
     <UButtonGroup class="w-full" size="lg">
       <UInput class="w-full" color="primary" placeholder="Enter a username..." v-model="username" autocomplete="off"/>
       <UButton :disabled="addFriendsDisabled" @click="addFriend" label="Add Friend" icon="material-symbols:person-add" />
     </UButtonGroup>
-    <p class="mt-4" :class="messageColor" >{{ errorMessage }}</p>
+    <p v-if="errorMessage !== ''" class="mt-4" :class="messageColor" >{{ errorMessage }}</p>
   </UCard>
 </template>
 
 <style scoped>
 
-.transition-friend-add {
-  transition: all 350ms cubic-bezier(.17,.67,.02,.99)
-}
 
 </style>
