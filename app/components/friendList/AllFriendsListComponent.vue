@@ -25,7 +25,7 @@ async function loadFriends() {
     }
   })
 
-  friends.value = res as any
+  friends.value = res as Friend[]
   friendsLoaded.value = true
 }
 
