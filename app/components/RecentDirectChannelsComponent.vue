@@ -41,11 +41,6 @@ function subtitle(channel: RecentChannel) {
   if (!channel.lastMessage?.messageId) return " "
   let text = channel.lastMessage.author.username + ": "
   text = text + channel.lastMessage.body
-  const truncate = text.length > 28
-  if (truncate) {
-    text = text.substring(0, 28)
-    text = text + "..."
-  }
   return text
 }
 
@@ -67,9 +62,9 @@ let loaded = ref(false)
         block
     >
       <UAvatar src="https://images.dog.ceo/breeds/terrier-fox/n02095314_464.jpg" size="lg"/>
-      <div>
-        <p>{{ channel.directMessageChannel.name || channel.channelId }}</p>
-        <p class="text-muted">{{ subtitle(channel) }}</p>
+      <div class="overflow-hidden">
+        <p class="truncate">{{ channel.directMessageChannel.name || channel.channelId }}</p>
+        <p class="text-muted truncate">{{ subtitle(channel) }}</p>
       </div>
     </UButton>
   </div>
