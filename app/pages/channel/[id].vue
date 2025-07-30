@@ -7,7 +7,7 @@ const config = useRuntimeConfig()
 const route = useRoute()
 const session = useState('session')
 const { $connectWebsocket } = useNuxtApp()
-
+import { DateTime } from "luxon"
 
 onMounted(async () => {
 
@@ -71,8 +71,23 @@ onMounted(async () => {
 function isGrouped(message, previousMessage) {
   if (!previousMessage) return false
   if (message.author.userId !== previousMessage.author.userId) return false
-  if (Math.abs(message.createdAt - previousMessage.createdAt) > 5 * 60 * 1000) return
+  if (!isSameDay(message, previousMessage)) return false
+  if (Math.abs(message.createdAt - previousMessage.createdAt) > 15 * 60 * 1000) return false
   return true
+}
+
+function isSameDay(message, previousMessage) {
+  if (!previousMessage) return false
+  const currentDate = DateTime.fromJSDate(new Date(message.createdAt)).toFormat(
+      'yyyy-MM-dd'
+  )
+  const previousDate = DateTime.fromJSDate(new Date(previousMessage.createdAt)).toFormat(
+      'yyyy-MM-dd'
+  )
+
+  console.log(currentDate, previousDate)
+
+  return currentDate === previousDate
 }
 
 </script>
@@ -87,7 +102,17 @@ function isGrouped(message, previousMessage) {
         </div>
       </UCard>
       <div class="flex-1 overflow-y-scroll flex flex-col-reverse" >
-        <TextMessageComponent :grouped="isGrouped(message, messages[i+1])" :message="message" :key="message.messageId" v-for="( message, i ) in messages"/>
+        <div :key="message.messageId" v-for="( message, i ) in messages">
+          <USeparator
+              class="mt-4"
+              v-if="!isSameDay(message, messages[i+1])"
+              :label="DateTime.fromJSDate(
+                  new Date(message.createdAt)
+                  ).toRelativeCalendar({
+                  locale: 'en-US'
+              })"/>
+          <TextMessageComponent :grouped="isGrouped(message, messages[i+1])" :message="message"/>
+        </div>
       </div>
       <TextChannelInputComponent />
     </div>
