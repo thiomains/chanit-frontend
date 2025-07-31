@@ -70,7 +70,7 @@ onMounted(async () => {
 
 function isGrouped(message, previousMessage) {
   if (!previousMessage) return false
-  if (message.author.userId !== previousMessage.author.userId) return false
+  if (message.author.id !== previousMessage.author.id) return false
   if (!isSameDay(message, previousMessage)) return false
   if (Math.abs(message.createdAt - previousMessage.createdAt) > 15 * 60 * 1000) return false
   return true
