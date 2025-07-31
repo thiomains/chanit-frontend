@@ -1,8 +1,8 @@
 <script setup>
 
-const { $axios } = useNuxtApp()
 const route = useRoute()
 const { $checkToken } = useNuxtApp()
+const config = useRuntimeConfig()
 
 onMounted( async () => {
   const code = route.query.code
@@ -13,16 +13,22 @@ onMounted( async () => {
     })
   }
 
-  const res = await $axios.post('/auth/faser', {
-    code: code
-  })
+  try {
+    const res = await $fetch(config.public.apiBaseUrl + "/auth/faser", {
+      method: "POST",
+      body: {
+        code: code
+      },
+      credentials: "include"
+    })
 
-  await $checkToken()
+    await $checkToken()
 
-  if (res.status === 200 || res.status === 201) {
     navigateTo({
       path: '/'
     })
+  } catch (e) {
+    console.log(e)
   }
 })
 
