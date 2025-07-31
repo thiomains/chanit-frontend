@@ -81,7 +81,7 @@ let loaded = ref(false)
 <template>
   <div v-if="loaded">
     <UButton
-        class="flex-row text-start items-center justify-start gap-2"
+        class="flex-row text-start items-center justify-start gap-2 mb-1"
         v-for="channel of data"
         :key="channel.lastMessage?.messageId || channel.channelId"
         :to="'/channel/' + channel.channelId"
