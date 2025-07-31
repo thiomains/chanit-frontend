@@ -58,7 +58,6 @@ function title(channel: RecentChannel) {
           username: string,
           userId: string
         }
-        console.log(otherMember)
         name = otherMember.username
         break
       }
