@@ -58,6 +58,8 @@ export default defineNuxtPlugin(async () => {
         session.value.user = meRes;
     }
 
+    await checkToken()
+
     return {
         provide : {
             checkToken,

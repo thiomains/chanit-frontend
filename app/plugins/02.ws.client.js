@@ -11,6 +11,8 @@ export default defineNuxtPlugin(() => {
         }
 
         return new Promise((resolve, reject) => {
+            if (!session.value.session) reject()
+
             ws = new WebSocket(config.public.webSocketUrl + "?session=" + session.value.session.sessionId + "&token=" + session.value.session.accessToken)
 
             ws.onmessage = (event) => {

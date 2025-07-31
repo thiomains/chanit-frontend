@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const sessionState = useState('session')
 const config = useRuntimeConfig()
+const { $getOnlineStatus } = useNuxtApp()
 
 interface RecentChannel {
   channelId: string,
@@ -44,24 +45,13 @@ onMounted(async () => {
 })
 
 function title(channel: RecentChannel) {
-  const session = sessionState.value as any
   let name = channel.directMessageChannel.name
   if (!name) {
-    let members = channel.directMessageChannel.members
-    for (let i = 0; i < members.length; i++) {
-      const member = members[i] as {
-        username: string,
-        userId: string
-      }
-      if (member.userId === session.user.userId) {
-        const otherMember = members[1-i] as {
-          username: string,
-          userId: string
-        }
-        name = otherMember.username
-        break
-      }
+    const otherMember = getOtherMember(channel) as {
+      username: string,
+      userId: string
     }
+    name = otherMember.username
   }
   return name
 }
@@ -71,6 +61,32 @@ function subtitle(channel: RecentChannel) {
   let text = channel.lastMessage.author.username + ": "
   text = text + channel.lastMessage.body
   return text
+}
+
+function getOtherMember(channel: RecentChannel) {
+  const session = sessionState.value as any
+  let members = channel.directMessageChannel.members
+  for (let i = 0; i < members.length; i++) {
+    const member = members[i] as {
+      username: string,
+      userId: string
+    }
+    if (member.userId === session.user.userId) {
+      const otherMember = members[1-i] as {
+        username: string,
+        userId: string
+      }
+      return otherMember
+    }
+  }
+}
+
+function showChip(channel: RecentChannel) {
+  const user = getOtherMember(channel) as {
+    username: string,
+    userId: string
+  }
+  return $getOnlineStatus(user.userId) === "online"
 }
 
 let data = ref<RecentChannel[]>([])
@@ -90,7 +106,9 @@ let loaded = ref(false)
         color="neutral"
         block
     >
-      <UAvatar src="https://images.dog.ceo/breeds/terrier-fox/n02095314_464.jpg" size="lg"/>
+      <UChip inset position="bottom-right" size="xl" :show="showChip(channel)">
+        <UAvatar src="https://images.dog.ceo/breeds/terrier-fox/n02095314_464.jpg" size="lg"/>
+      </UChip>
       <div class="overflow-hidden">
         <p class="truncate">{{ title(channel) }}</p>
         <p class="text-muted truncate">{{ subtitle(channel) }}</p>
