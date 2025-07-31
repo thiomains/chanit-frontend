@@ -15,6 +15,12 @@ interface RecentChannel {
   },
   directMessageChannel: {
     name?: string
+    members: [
+      {
+        userId: string,
+        username: string,
+      }
+    ]
   }
 }
 
@@ -36,6 +42,30 @@ async function loadRecentChannels() {
 onMounted(async () => {
   await loadRecentChannels()
 })
+
+function title(channel: RecentChannel) {
+  const session = sessionState.value as any
+  let name = channel.directMessageChannel.name
+  if (!name) {
+    let members = channel.directMessageChannel.members
+    for (let i = 0; i < members.length; i++) {
+      const member = members[i] as {
+        username: string,
+        userId: string
+      }
+      if (member.userId === session.user.userId) {
+        const otherMember = members[1-i] as {
+          username: string,
+          userId: string
+        }
+        console.log(otherMember)
+        name = otherMember.username
+        break
+      }
+    }
+  }
+  return name
+}
 
 function subtitle(channel: RecentChannel) {
   if (!channel.lastMessage?.messageId) return " "
@@ -63,7 +93,7 @@ let loaded = ref(false)
     >
       <UAvatar src="https://images.dog.ceo/breeds/terrier-fox/n02095314_464.jpg" size="lg"/>
       <div class="overflow-hidden">
-        <p class="truncate">{{ channel.directMessageChannel.name || channel.channelId }}</p>
+        <p class="truncate">{{ title(channel) }}</p>
         <p class="text-muted truncate">{{ subtitle(channel) }}</p>
       </div>
     </UButton>

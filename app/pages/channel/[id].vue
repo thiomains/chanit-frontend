@@ -20,10 +20,18 @@ onMounted(async () => {
       }
     })
 
-    if (res.channel.channelType === "direct-message") {
-      let members = res.channel.directMessageChannel.members
-      members.splice(members.indexOf(session.value.user), 1)
-      channelName.value = members[0]
+    if (res.channelType === "direct-message") {
+      let name = res.directMessageChannel.name
+      if (!name) {
+        let members = res.directMessageChannel.members
+        for (let i = 0; i < members.length; i++) {
+          if (members[i].userId === session.value.user.userId) {
+            name = members[1-i].username
+            break
+          }
+        }
+      }
+      channelName.value = name
     }
 
   } catch (e) {
