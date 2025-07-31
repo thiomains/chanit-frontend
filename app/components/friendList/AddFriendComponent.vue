@@ -3,6 +3,7 @@
 const sessionState = useState('session') as any
 const nuxtApp = useNuxtApp()
 const config = useRuntimeConfig()
+const emit = defineEmits(['send'])
 
 async function addFriend() {
   let name = username.value
@@ -22,6 +23,7 @@ async function addFriend() {
     addFriendsDisabled.value = false
     errorMessage.value = res.message
     messageColor.value = "text-success"
+    emit("send", res)
   } catch (e) {
     const error = e as any
     addFriendsDisabled.value = false

@@ -45,7 +45,6 @@ const items = ref<TabsItem[]>([
         <AllFriendsListComponent />
       </template>
       <template #friendRequests="{ item }">
-        <AddFriendComponent/>
         <FriendRequestsComponent/>
       </template>
     </UTabs>
