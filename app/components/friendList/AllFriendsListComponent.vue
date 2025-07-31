@@ -36,14 +36,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="friendsLoaded">
-    <div class="p-4">
-      <div class="h-12 items-center p-2">
-        <p class="font-bold">All Friends - {{ friends.length }}</p>
-      </div>
+  <div v-if="friendsLoaded" class="h-full flex flex-col justify-between">
+    <div class="shrink-0 p-2">
+      <p class="font-bold px-4">All Friends - {{ friends.length }}</p>
+    </div>
+    <div class="h-full overflow-auto">
       <div v-for="friend in friends" :key="friend.user.userId">
         <USeparator />
-        <div class="items-center p-2 py-4 flex gap-2 transition-colors hover:bg-muted rounded-lg">
+        <div class="items-center px-6 py-4 flex gap-2 transition-colors hover:bg-muted rounded-lg">
           <UAvatar src="https://images.dog.ceo/breeds/dingo/n02115641_1380.jpg" size="3xl"/>
           <div class="flex flex-col flex-1">
             <p class="font-bold">{{ friend.user.username }}</p>
