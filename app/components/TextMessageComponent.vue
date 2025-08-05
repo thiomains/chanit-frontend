@@ -16,6 +16,7 @@ const grouped = ref(props.grouped)
         <p class="text-dimmed text-sm" >{{ new Date(message.createdAt).toLocaleTimeString().substring(0, 5) }}</p>
       </div>
       <p>{{ message.body }}</p>
+      <img v-for="attachment of message.attachments" :src="attachment.url" alt="">
     </div>
   </div>
 </template>
