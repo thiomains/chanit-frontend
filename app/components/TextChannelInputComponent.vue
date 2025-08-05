@@ -21,9 +21,27 @@ async function enterPressed() {
         Session: session.value.session.sessionId
       },
       body: {
-        body: messageBody
+        body: messageBody,
+        attachmentCount: attachments.value.length
       }
     })
+
+    for (let i = 0; i < attachments.value.length; i++) {
+      console.log(attachments.value[i])
+      const formData = new FormData()
+      formData.append('attachment', attachments.value[i])
+      const uploadRes = await $fetch(config.public.apiBaseUrl + "/message/" + res.messageId + "/attachments", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.value.session.accessToken}`,
+          Session: session.value.session.sessionId
+        },
+        body: formData
+      })
+    }
+
+    attachments.value = []
+    attachmentCollapsible.value = false
 
     emit("message-sent", res)
 
@@ -62,6 +80,30 @@ let lastTyping = ref(0)
 let showTyping = ref(false)
 let typingUser = ref({})
 
+let attachmentCollapsible = ref(false)
+
+function toggleAttachmentCollapsible() {
+  attachmentCollapsible.value = !attachmentCollapsible.value
+}
+
+let attachments = ref([])
+function attachmentsUpdate() {
+  if (attachments.value.length > 9) {
+    attachments.value = attachments.value.slice(0, 9)
+    tooManyFiles.value = true
+  }
+  for (let i = 0; i < attachments.value.length; i++) {
+    if (attachments.value[i].size > 78643200) {
+      attachments.value.splice(i, 1)
+      filesTooLarge.value = true
+    }
+  }
+}
+
+let tooManyFiles = ref(false)
+let filesTooLarge = ref(false)
+
+
 </script>
 
 <template>
@@ -69,6 +111,19 @@ let typingUser = ref({})
     <p v-if="showTyping" ><b class="font-bold">{{ typingUser }}</b> is typing...</p>
   </div>
   <div class="p-4">
+    <UCollapsible :open="attachmentCollapsible" :unmount-on-hide="false">
+      <template #content>
+        <UFileUpload
+            v-model="attachments"
+            @update:modelValue="attachmentsUpdate"
+            class="mx-4 mb-4"
+            label="Drop your files here"
+            description="Any files (max. 75MB)"
+            layout="list"
+            multiple
+        />
+      </template>
+    </UCollapsible>
     <UInput
         @input="sendTyping"
         @keydown.enter="enterPressed"
@@ -80,10 +135,32 @@ let typingUser = ref({})
         autofocus
     >
       <template #leading>
-        <UButton icon="material-symbols:add-circle-rounded" variant="link" color="neutral" size="xl" />
+        <UButton @click="toggleAttachmentCollapsible" icon="material-symbols:add-circle-rounded" variant="link" color="neutral" size="xl" />
       </template>
     </UInput>
   </div>
+  <UModal
+    v-model:open="tooManyFiles"
+  >
+    <template #content>
+      <div class="m-4 my-12 flex-col items-center text-center">
+        <UIcon name="material-symbols:file-present-outline" class="size-12" />
+        <h2 class="text-xl font-bold">Too many attachments</h2>
+        <p class="text-muted">You may only attach 9 files per message</p>
+      </div>
+    </template>
+  </UModal>
+  <UModal
+      v-model:open="filesTooLarge"
+  >
+    <template #content>
+      <div class="m-4 my-12 flex-col items-center text-center">
+        <UIcon name="material-symbols:file-present-outline" class="size-12" />
+        <h2 class="text-xl font-bold">File too large</h2>
+        <p class="text-muted">File attachments are limited to 75MB in size</p>
+      </div>
+    </template>
+  </UModal>
 </template>
 
 <style scoped>
