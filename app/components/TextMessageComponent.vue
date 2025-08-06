@@ -12,12 +12,12 @@ const grouped = ref(props.grouped)
     <div class="w-10">
       <UAvatar v-if="!grouped" src="https://images.dog.ceo/breeds/doberman/n02107142_5570.jpg" size="xl" />
     </div>
-    <div>
+    <div class="w-5/6">
       <div v-if="!grouped" class="flex items-end gap-2">
         <p class="font-bold">{{ message.author.username }}</p>
         <p class="text-dimmed text-sm" >{{ new Date(message.createdAt).toLocaleTimeString().substring(0, 5) }}</p>
       </div>
-      <p class="break-words break-all max-w-5/6">{{ message.body }}</p>
+      <p class="break-words break-all w-full">{{ message.body }}</p>
       <MessageAttachmentsComponent :attachments="message.attachments" />
     </div>
   </div>
