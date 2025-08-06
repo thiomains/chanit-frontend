@@ -52,6 +52,7 @@ async function fetchMessages() {
       }
     })
     messages.value = res.reverse()
+    scrollToBottom(true)
   } catch (e) {
     console.log(e)
   }
@@ -74,6 +75,7 @@ onMounted(async () => {
     if (receivedMessage.channelId !== route.params.id) return
     receivedMessage.author.id = receivedMessage.author.userId
     messages.value.push(receivedMessage)
+    scrollToBottom()
   })
 })
 
@@ -97,6 +99,24 @@ function isSameDay(message, previousMessage) {
   return currentDate === previousDate
 }
 
+import { useTemplateRef } from 'vue'
+
+const myEl = useTemplateRef('messagesContainer')
+
+function scrollToBottom(force) {
+  nextTick(() => {
+    const el = myEl.value
+    const threshold = 50 // Pixel-Toleranz
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
+
+    if (distanceFromBottom > threshold && !force) return
+
+    nextTick(() => {
+      el.scrollTop = el.scrollHeight
+    })
+  })
+}
+
 </script>
 
 <template>
@@ -108,7 +128,7 @@ function isSameDay(message, previousMessage) {
           <p class="font-bold">{{ channelName }}</p>
         </div>
       </UCard>
-      <div class="flex-1 overflow-y-scroll flex flex-col">
+      <div class="flex-1 overflow-y-scroll flex flex-col" ref="messagesContainer">
         <div :key="message.messageId" v-for="( message, i ) in messages">
           <USeparator
               class="mt-4"
