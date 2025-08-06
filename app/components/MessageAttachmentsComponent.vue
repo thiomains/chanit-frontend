@@ -53,8 +53,8 @@ function downloadAttachment(attachment: Attachment) {
       arrows
       dots
   >
-    <div @click="showModal(item)" class="flex h-[20rem] w-xs justify-center items-center">
-      <img :src="item + '?max=100h'" alt="Image Attachment" class="max-h-full max-w-full">
+    <div @click="showModal(item)" class="flex h-[20rem] w-xs justify-center items-center rounded-lg overflow-hidden">
+      <NuxtImg :src="item + '?max=320'" :placeholder="item + '?max=64'" class="h-full w-full object-cover" />
     </div>
   </UCarousel>
   <UModal

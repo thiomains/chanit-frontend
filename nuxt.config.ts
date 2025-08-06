@@ -16,5 +16,5 @@ export default defineNuxtConfig({
       webSocketUrl: process.env.WEBSOCKET_URL
     }
   },
-  modules: ['@nuxt/ui']
+  modules: ['@nuxt/ui', '@nuxt/image']
 })
