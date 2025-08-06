@@ -17,7 +17,7 @@ const grouped = ref(props.grouped)
         <p class="font-bold">{{ message.author.username }}</p>
         <p class="text-dimmed text-sm" >{{ new Date(message.createdAt).toLocaleTimeString().substring(0, 5) }}</p>
       </div>
-      <p class="break-words break-all w-full">{{ message.body }}</p>
+      <p class="break-words w-full">{{ message.body }}</p>
       <MessageAttachmentsComponent :attachments="message.attachments" />
     </div>
   </div>
