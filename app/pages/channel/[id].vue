@@ -51,7 +51,7 @@ async function fetchMessages() {
         Session: session.value.session.sessionId
       }
     })
-    messages.value = res
+    messages.value = res.reverse()
   } catch (e) {
     console.log(e)
   }
@@ -72,7 +72,8 @@ onMounted(async () => {
     if (message.type !== "message") return
     const receivedMessage = message.message
     if (receivedMessage.channelId !== route.params.id) return
-    messages.value.unshift(receivedMessage)
+    receivedMessage.author.id = receivedMessage.author.userId
+    messages.value.push(receivedMessage)
   })
 })
 
@@ -107,17 +108,17 @@ function isSameDay(message, previousMessage) {
           <p class="font-bold">{{ channelName }}</p>
         </div>
       </UCard>
-      <div class="flex-1 overflow-y-scroll flex flex-col-reverse" >
+      <div class="flex-1 overflow-y-scroll flex flex-col">
         <div :key="message.messageId" v-for="( message, i ) in messages">
           <USeparator
               class="mt-4"
-              v-if="!isSameDay(message, messages[i+1])"
+              v-if="!isSameDay(message, messages[i-1])"
               :label="DateTime.fromJSDate(
                   new Date(message.createdAt)
                   ).toRelativeCalendar({
                   locale: 'en-US'
               })"/>
-          <TextMessageComponent :grouped="isGrouped(message, messages[i+1])" :message="message"/>
+          <TextMessageComponent :grouped="isGrouped(message, messages[i-1])" :message="message"/>
         </div>
       </div>
       <TextChannelInputComponent />
