@@ -50,11 +50,11 @@ function downloadAttachment(attachment: Attachment) {
       v-if="imageAttachments.length > 0"
       v-slot="{ item }"
       :items="imageAttachments"
-      class="w-md items-center justify-center border border-accented rounded-lg mb-10 bg-default"
+      class="w-xs items-center justify-center border border-accented rounded-lg mb-10 bg-default"
       arrows
       dots
   >
-    <div @click="showModal(item)" class="flex h-[28rem] w-md justify-center items-center">
+    <div @click="showModal(item)" class="flex h-[20rem] w-xs justify-center items-center">
       <img :src="item + ''" alt="Image Attachment" class="max-h-full max-w-full">
     </div>
   </UCarousel>
@@ -70,11 +70,11 @@ function downloadAttachment(attachment: Attachment) {
     </template>
   </UModal>
   <div v-if="otherAttachments.length > 0">
-    <div v-for="attachment of otherAttachments" class=" mb-2 p-4 border border-muted bg-default rounded-lg items-center flex gap-2">
+    <div v-for="attachment of otherAttachments" class="mb-2 p-4 border border-muted bg-default rounded-lg items-center flex gap-2">
       <UIcon name="material-symbols:unknown-document" class="size-8" />
-      <div class="flex flex-col gap-1 flex-1">
-        <p class="leading-none">{{ attachment.fileName }}</p>
-        <p class="text-muted leading-none">{{ prettyBytes(attachment.fileSize) }}</p>
+      <div class="flex flex-col gap-1 w-48">
+        <p class="leading-none truncate">{{ attachment.fileName }}</p>
+        <p class="text-muted leading-none truncate">{{ prettyBytes(attachment.fileSize) }}</p>
       </div>
       <UButton @click="downloadAttachment(attachment)" icon="material-symbols:download" variant="link" color="neutral" size="xl" />
     </div>
