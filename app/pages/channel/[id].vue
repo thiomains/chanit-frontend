@@ -106,7 +106,7 @@ const myEl = useTemplateRef('messagesContainer')
 function scrollToBottom(force) {
   nextTick(() => {
     const el = myEl.value
-    const threshold = 50 // Pixel-Toleranz
+    const threshold = 200 // Pixel-Toleranz
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
 
     if (distanceFromBottom > threshold && !force) return
