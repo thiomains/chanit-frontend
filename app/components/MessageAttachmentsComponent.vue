@@ -54,7 +54,7 @@ function downloadAttachment(attachment: Attachment) {
       dots
   >
     <div @click="showModal(item)" class="flex h-[20rem] w-xs justify-center items-center">
-      <img :src="item + ''" alt="Image Attachment" class="max-h-full max-w-full">
+      <img :src="item + '?max=100h'" alt="Image Attachment" class="max-h-full max-w-full">
     </div>
   </UCarousel>
   <UModal
