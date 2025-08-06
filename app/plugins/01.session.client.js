@@ -16,9 +16,7 @@ export default defineNuxtPlugin(async () => {
                 credentials: "include"
             })
 
-            session.value = {
-                session: res,
-            }
+            session.value.session = res
 
             return true;
 
