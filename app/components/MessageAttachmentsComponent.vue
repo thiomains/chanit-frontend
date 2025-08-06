@@ -50,6 +50,7 @@ function downloadAttachment(attachment: Attachment) {
       v-slot="{ item }"
       :items="imageAttachments"
       class="w-xs items-center justify-center border border-accented rounded-lg mb-10 bg-default"
+      wheel-gestures
       arrows
       dots
   >
