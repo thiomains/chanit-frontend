@@ -39,6 +39,10 @@ function closeModal(event: any) {
 
 let modalImageUrl = ref("")
 
+function downloadAttachment(attachment: Attachment) {
+  window.location.href = attachment.url + '?type=download'
+}
+
 </script>
 
 <template>
@@ -72,7 +76,7 @@ let modalImageUrl = ref("")
         <p class="leading-none">{{ attachment.fileName }}</p>
         <p class="text-muted leading-none">{{ prettyBytes(attachment.fileSize) }}</p>
       </div>
-      <UButton icon="material-symbols:download" variant="link" color="neutral" size="xl" />
+      <UButton @click="downloadAttachment(attachment)" icon="material-symbols:download" variant="link" color="neutral" size="xl" />
     </div>
   </div>
 </template>
