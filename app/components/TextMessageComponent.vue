@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import MessageAttachmentsComponent from "~/components/MessageAttachmentsComponent.vue";
+
 const props = defineProps(["message", "grouped"])
 const message = ref(props.message)
 const grouped = ref(props.grouped)
@@ -16,7 +18,7 @@ const grouped = ref(props.grouped)
         <p class="text-dimmed text-sm" >{{ new Date(message.createdAt).toLocaleTimeString().substring(0, 5) }}</p>
       </div>
       <p>{{ message.body }}</p>
-      <img v-for="attachment of message.attachments" :src="attachment.url" alt="">
+      <MessageAttachmentsComponent :attachments="message.attachments" />
     </div>
   </div>
 </template>
