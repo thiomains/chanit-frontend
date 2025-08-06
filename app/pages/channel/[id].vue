@@ -99,7 +99,7 @@ function isSameDay(message, previousMessage) {
 </script>
 
 <template>
-  <div class="w-full h-full flex gap-2 ">
+  <div class="w-full h-full flex gap-2">
     <div class="w-full h-full flex flex-col">
       <UCard variant="subtle">
         <div class="flex items-center gap-2">
@@ -122,9 +122,9 @@ function isSameDay(message, previousMessage) {
       </div>
       <TextChannelInputComponent />
     </div>
-    <div>
+    <!-- <div>
       <USkeleton class="w-xs h-full" />
-    </div>
+    </div> -->
   </div>
 </template>
 
