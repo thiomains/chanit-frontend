@@ -69,7 +69,7 @@ function downloadAttachment(attachment: Attachment) {
     </template>
   </UModal>
   <div v-if="otherAttachments.length > 0">
-    <div v-for="attachment of otherAttachments" class="mb-2 p-4 border border-muted bg-default rounded-lg items-center flex gap-2">
+    <div v-for="attachment of otherAttachments" class="mb-2 p-4 border border-muted bg-default rounded-lg items-center flex gap-2 max-w-fit">
       <UIcon name="material-symbols:unknown-document" class="size-8" />
       <div class="flex flex-col gap-1 w-48">
         <p class="leading-none truncate">{{ attachment.fileName }}</p>
