@@ -8,11 +8,20 @@ const emit = defineEmits(['message-sent'])
 
 let messageInput = ref("")
 
-async function enterPressed() {
+async function enterPressed(event) {
+
+  if (event.shiftKey) {
+    return
+  }
+
+  event.preventDefault()
+
   const messageBody = messageInput.value.trim()
   if (messageBody.length === 0 && attachments.value.length === 0) {
     return
   }
+  messageInput.value = ""
+
   try {
     const res = await $fetch(config.public.apiBaseUrl + "/channel/" + route.params.id + "/messages", {
       method: "POST",
@@ -44,8 +53,6 @@ async function enterPressed() {
     attachmentCollapsible.value = false
 
     emit("message-sent", res)
-
-    messageInput.value = ""
   } catch (e) {
     console.log(e)
   }
