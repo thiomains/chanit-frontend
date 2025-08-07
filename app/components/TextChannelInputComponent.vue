@@ -131,20 +131,23 @@ let filesTooLarge = ref(false)
         />
       </template>
     </UCollapsible>
-    <UInput
+    <UTextarea
         @input="sendTyping"
         @keydown.enter="enterPressed"
-        class="w-full"
+        class="w-full min-h-14"
         v-model="messageInput"
         placeholder="Type a message..."
         size="xl"
         :ui="{ leading: 'ps-1' }"
         autofocus
+        autoresize
+        :maxrows="10"
+        :rows="1"
     >
       <template #leading>
-        <UButton @click="toggleAttachmentCollapsible" icon="material-symbols:add-circle-rounded" variant="link" color="neutral" size="xl" />
+        <UButton @click="toggleAttachmentCollapsible" icon="material-symbols:add-circle-rounded" variant="link" color="neutral" size="xl" class="mt-auto" />
       </template>
-    </UInput>
+    </UTextarea>
   </div>
   <UModal
     v-model:open="tooManyFiles"
