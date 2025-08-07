@@ -10,7 +10,7 @@ let messageInput = ref("")
 
 async function enterPressed() {
   const messageBody = messageInput.value.trim()
-  if (messageBody.length === 0) {
+  if (messageBody.length === 0 && attachments.value.length === 0) {
     return
   }
   try {
