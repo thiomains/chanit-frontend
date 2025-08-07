@@ -5,6 +5,14 @@ const props = defineProps(["message", "grouped"])
 const message = ref(props.message)
 const grouped = ref(props.grouped)
 
+import MarkdownIt from "markdown-it"
+
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  breaks: true,
+}).disable(['hr', 'image'])
+
 </script>
 
 <template>
@@ -17,11 +25,10 @@ const grouped = ref(props.grouped)
         <p class="font-bold">{{ message.author.username }}</p>
         <p class="text-dimmed text-sm" >{{ new Date(message.createdAt).toLocaleTimeString().substring(0, 5) }}</p>
       </div>
-      <p class="break-words break-all w-full">{{ message.body }}</p>
+      <div v-html="md.render(message.body)" class="break-words break-all w-full markdown-body" />
       <MessageAttachmentsComponent :attachments="message.attachments" />
     </div>
   </div>
-        <div v-html="md.render(message.body)" class="break-words break-all w-full markdown-body" />
 </template>
 
 <style scoped>
