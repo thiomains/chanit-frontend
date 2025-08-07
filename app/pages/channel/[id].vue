@@ -117,6 +117,30 @@ function scrollToBottom(force) {
   })
 }
 
+let fetchingMessages = ref(true)
+async function handleScroll(event) {
+  if (messages.value.length === 0) return
+  if (event.srcElement.scrollTop < 1000) {
+    if (fetchingMessages.value) return
+
+    fetchingMessages.value = true
+
+    try {
+      const res = await $fetch(config.public.apiBaseUrl + "/channel/" + route.params.id + "/messages?before=" + messages.value.at(0).createdAt, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session.value.session.accessToken}`,
+          Session: session.value.session.sessionId
+        }
+      })
+
+      messages.value = res.reverse().concat(messages.value)
+    } catch (e) {
+      console.log(e)
+    }
+  } else fetchingMessages.value = false
+}
+
 </script>
 
 <template>
@@ -128,7 +152,7 @@ function scrollToBottom(force) {
           <p class="font-bold">{{ channelName }}</p>
         </div>
       </UCard>
-      <div class="flex-1 overflow-y-scroll flex flex-col" ref="messagesContainer">
+      <div class="flex-1 overflow-y-scroll flex flex-col" ref="messagesContainer" @scroll="handleScroll">
         <div :key="message.messageId" v-for="( message, i ) in messages">
           <USeparator
               class="mt-4"
