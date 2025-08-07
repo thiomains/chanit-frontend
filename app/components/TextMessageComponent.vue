@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import MessageAttachmentsComponent from "~/components/MessageAttachmentsComponent.vue";
 
 const props = defineProps(["message", "grouped"])
@@ -21,6 +21,7 @@ const grouped = ref(props.grouped)
       <MessageAttachmentsComponent :attachments="message.attachments" />
     </div>
   </div>
+        <div v-html="md.render(message.body)" class="break-words break-all w-full markdown-body" />
 </template>
 
 <style scoped>

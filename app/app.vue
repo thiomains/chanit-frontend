@@ -33,3 +33,5 @@ onMounted( async () => {
   </div>
 
 </template>
+
+<style src="@/assets/css/markdown.css"></style>
