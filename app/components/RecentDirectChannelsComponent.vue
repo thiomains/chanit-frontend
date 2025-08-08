@@ -86,6 +86,7 @@ function showChip(channel: RecentChannel) {
     username: string,
     userId: string
   }
+  if (!$getOnlineStatus) return false
   return $getOnlineStatus(user.userId) === "online"
 }
 
