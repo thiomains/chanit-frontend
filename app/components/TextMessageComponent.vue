@@ -13,12 +13,15 @@ const md = new MarkdownIt({
   breaks: true,
 }).disable(['hr', 'image'])
 
+let avatarUrl = ref(message.value.author.profilePictureUrl)
+if (avatarUrl.value === "") avatarUrl.value = "https://cdn.minescope.eu/attachments/76509151861145600/78839340859392000/78839341262045184/Download%20(17).png"
+
 </script>
 
 <template>
   <div class="flex gap-4 hover:bg-[var(--ui-bg-muted)] py-0.5 px-4" :class="{ 'mt-4': !grouped }">
     <div class="w-10">
-      <UAvatar v-if="!grouped" src="https://images.dog.ceo/breeds/doberman/n02107142_5570.jpg" size="xl" />
+      <UAvatar v-if="!grouped" :src="avatarUrl + '?size=40'" size="xl" />
     </div>
     <div class="w-5/6">
       <div v-if="!grouped" class="flex items-end gap-2">

@@ -20,6 +20,7 @@ interface RecentChannel {
       {
         userId: string,
         username: string,
+        profilePictureUrl: string
       }
     ]
   }
@@ -84,7 +85,8 @@ function getOtherMember(channel: RecentChannel) {
 function showChip(channel: RecentChannel) {
   const user = getOtherMember(channel) as {
     username: string,
-    userId: string
+    userId: string,
+    profilePictureUrl: string
   }
   if (!$getOnlineStatus) return false
   return $getOnlineStatus(user.userId) === "online"
@@ -92,6 +94,15 @@ function showChip(channel: RecentChannel) {
 
 let data = ref<RecentChannel[]>([])
 let loaded = ref(false)
+
+function avatarUrl(channel: RecentChannel) {
+  const member = getOtherMember(channel) as {
+    username: string,
+    userId: string,
+    profilePictureUrl: string
+  }
+  return member.profilePictureUrl === "" ? "https://cdn.minescope.eu/attachments/76509151861145600/78839340859392000/78839341262045184/Download%20(17).png" : member.profilePictureUrl
+}
 
 </script>
 
@@ -108,7 +119,7 @@ let loaded = ref(false)
         block
     >
       <UChip inset position="bottom-right" size="xl" :show="showChip(channel)">
-        <UAvatar src="https://images.dog.ceo/breeds/terrier-fox/n02095314_464.jpg" size="lg"/>
+        <UAvatar :src="avatarUrl(channel)" size="lg"/>
       </UChip>
       <div class="overflow-hidden">
         <p class="truncate">{{ title(channel) }}</p>

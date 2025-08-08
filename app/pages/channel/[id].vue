@@ -20,6 +20,17 @@ onMounted(async () => {
       }
     })
 
+    for (let i = 0; i < res.directMessageChannel.members.length; i++) {
+      const user = res.directMessageChannel.members[i]
+      const profile = await $fetch(config.public.apiBaseUrl + "/user/" + user.userId + "/profile", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session.value.session.accessToken}`,
+          Session: session.value.session.sessionId
+        }
+      })
+    }
+
     if (res.channelType === "direct-message") {
       let name = res.directMessageChannel.name
       if (!name) {
@@ -81,7 +92,7 @@ onMounted(async () => {
 
 function isGrouped(message, previousMessage) {
   if (!previousMessage) return false
-  if (message.author.id !== previousMessage.author.id) return false
+  if (message.author.userId !== previousMessage.author.userId) return false
   if (!isSameDay(message, previousMessage)) return false
   if (Math.abs(message.createdAt - previousMessage.createdAt) > 15 * 60 * 1000) return false
   return true
