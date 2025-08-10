@@ -110,6 +110,27 @@ function attachmentsUpdate() {
 let tooManyFiles = ref(false)
 let filesTooLarge = ref(false)
 
+function handlePaste(event) {
+
+  if (event.clipboardData.files.length > 0) {
+    const dt = new DataTransfer();
+
+    if (attachments.value) {
+      for (let i = 0; i < attachments.value.length; i++) {
+        dt.items.add(attachments.value[i]);
+      }
+    }
+
+    for (let i = 0; i < event.clipboardData.files.length; i++) {
+      dt.items.add(event.clipboardData.files[i]);
+    }
+
+// Array statt FileList
+    attachments.value = Array.from(dt.files);
+
+    attachmentsUpdate();
+  }
+}
 
 </script>
 
@@ -132,6 +153,7 @@ let filesTooLarge = ref(false)
       </template>
     </UCollapsible>
     <UTextarea
+        @paste="handlePaste"
         @input="sendTyping"
         @keydown.enter="enterPressed"
         class="w-full min-h-14"
