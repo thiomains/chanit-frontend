@@ -11,8 +11,9 @@ import SidebarChannelSelectComponent from "~/components/SidebarChannelSelectComp
     <div class="w-20 h-full shrink-0">
 
     </div> -->
-    <div class="w-xs h-full shrink-0">
-      <SidebarChannelSelectComponent class="w-full h-full"/>
+    <div class="w-xs h-full shrink-0 flex flex-col gap-2">
+      <SidebarChannelSelectComponent class="w-full"/>
+      <SidebarProfileCardComponent />
     </div>
     <div class="h-full w-full shrink">
       <slot />

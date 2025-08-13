@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <UCard class="w-full h-full">
+  <UCard class="w-full grow">
     <div class="flex flex-col gap-2 mb-4">
       <UButton size="xl" to="/" label="Friends" active-variant="subtle" color="neutral" variant="ghost" icon="material-symbols:group"/>
       <UButton size="xl" to="/test" label="Test" active-variant="subtle" color="neutral" variant="ghost" icon="material-symbols:question-mark"/>
