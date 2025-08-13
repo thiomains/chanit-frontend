@@ -101,7 +101,7 @@ function avatarUrl(channel: RecentChannel) {
     userId: string,
     profilePictureUrl: string
   }
-  return member.profilePictureUrl === "" ? "https://cdn.minescope.eu/attachments/76509151861145600/78839340859392000/78839341262045184/Download%20(17).png?size=40" : member.profilePictureUrl
+  return member.profilePictureUrl === "" ? "https://cdn.minescope.eu/attachments/76509151861145600/78839340859392000/78839341262045184/Download%20(17).png?size=40" : member.profilePictureUrl + "?size=40"
 }
 
 </script>
