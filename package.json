@@ -16,7 +16,7 @@
     "axios": "^1.10.0",
     "luxon": "^3.7.1",
     "markdown-it": "^14.1.0",
-    "nuxt": "^4.0.1",
+    "nuxt": "^4.0.3",
     "pretty-bytes": "^7.0.0",
     "tailwindcss": "^4.1.11",
     "valibot": "^1.1.0",
