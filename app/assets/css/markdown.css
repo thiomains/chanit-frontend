@@ -360,7 +360,7 @@
 .markdown-body h6 {
     font-weight: var(--base-text-weight-semibold, 600);
     font-size: .85em;
-    color: var(--fgColor-muted);
+    color: var(--ui-text-muted);
 }
 
 .markdown-body p {
@@ -372,7 +372,7 @@
     margin: 0;
     padding: 0 1em;
     color: var(--fgColor-muted);
-    border-left: .25em solid var(--borderColor-default);
+    border-left: .25em solid var(--ui-border);
 }
 
 .markdown-body ul,
@@ -455,7 +455,7 @@
 }
 
 .markdown-body .absent {
-    color: var(--fgColor-danger);
+    color: var(--ui-warning);
 }
 
 .markdown-body .anchor {
@@ -495,7 +495,7 @@
 .markdown-body h4 .octicon-link,
 .markdown-body h5 .octicon-link,
 .markdown-body h6 .octicon-link {
-    color: var(--fgColor-default);
+    color: var(--ui-text);
     vertical-align: middle;
     visibility: hidden;
 }
@@ -636,12 +636,12 @@
 }
 
 .markdown-body table tr {
-    background-color: var(--bgColor-default);
-    border-top: 1px solid var(--borderColor-muted);
+    background-color: var(--ui-bg);
+    border-top: 1px solid var(--ui-bg-muted);
 }
 
 .markdown-body table tr:nth-child(2n) {
-    background-color: var(--bgColor-muted);
+    background-color: var(--ui-bg-muted);
 }
 
 .markdown-body table img {
@@ -674,7 +674,7 @@
     padding: 7px;
     margin: 13px 0 0;
     overflow: hidden;
-    border: 1px solid var(--borderColor-default);
+    border: 1px solid var(--ui-border);
 }
 
 .markdown-body span.frame span img {
@@ -686,7 +686,7 @@
     display: block;
     padding: 5px 0 0;
     clear: both;
-    color: var(--fgColor-default);
+    color: var(--ui-text);
 }
 
 .markdown-body span.align-center {
@@ -756,7 +756,7 @@
     margin: 0;
     font-size: 85%;
     white-space: break-spaces;
-    background-color: var(--bgColor-neutral-muted);
+    background-color: var(--ui-bg-muted);
     border-radius: 6px;
 }
 
@@ -801,8 +801,8 @@
     overflow: auto;
     font-size: 85%;
     line-height: 1.45;
-    color: var(--fgColor-default);
-    background-color: var(--bgColor-muted);
+    color: var(--ui-text);
+    background-color: var(--ui-bg-muted);
     border-radius: 6px;
 }
 
@@ -832,7 +832,7 @@
 .markdown-body .csv-data .blob-num {
     padding: 10px var(--base-size-8) 9px;
     text-align: right;
-    background: var(--bgColor-default);
+    background: var(--ui-bg);
     border: 0;
 }
 
@@ -842,7 +842,7 @@
 
 .markdown-body .csv-data th {
     font-weight: var(--base-text-weight-semibold, 600);
-    background: var(--bgColor-muted);
+    background: var(--ui-bg-muted);
     border-top: 0;
 }
 
@@ -857,7 +857,7 @@
 .markdown-body .footnotes {
     font-size: 12px;
     color: var(--fgColor-muted);
-    border-top: 1px solid var(--borderColor-default);
+    border-top: 1px solid var(--ui-border);
 }
 
 .markdown-body .footnotes ol {
@@ -882,7 +882,7 @@
     left: calc(var(--base-size-24)*-1);
     pointer-events: none;
     content: "";
-    border: 2px solid var(--borderColor-accent-emphasis);
+    border: 2px solid var(--ui-border-accented);
     border-radius: 6px;
 }
 
