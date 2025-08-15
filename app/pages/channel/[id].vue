@@ -81,14 +81,26 @@ onMounted(async () => {
   }))
   ws.addEventListener("message", () => {
     const message = JSON.parse(event.data)
-    if (message.type !== "message") return
-    const receivedMessage = message.message
-    if (receivedMessage.channelId !== route.params.id) return
-    receivedMessage.author.id = receivedMessage.author.userId
-    messages.value.push(receivedMessage)
-    scrollToBottom()
+    if (message.type === "message") messageSentReceived(message)
+    if (message.type === "message-delete") messageDeletedReceived(message)
   })
 })
+
+function messageSentReceived(message) {
+  const receivedMessage = message.message
+  if (receivedMessage.channelId !== route.params.id) return
+  receivedMessage.author.id = receivedMessage.author.userId
+  messages.value.push(receivedMessage)
+  scrollToBottom()
+}
+
+function messageDeletedReceived(message) {
+  for (let i = 0; i < messages.value.length; i++) {
+    const msg = messages.value[i]
+    if (msg.messageId !== message.messageId) continue
+    messages.value.splice(i, 1)
+  }
+}
 
 function isGrouped(message, previousMessage) {
   if (!previousMessage) return false
