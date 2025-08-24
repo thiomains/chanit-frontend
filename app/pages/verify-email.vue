@@ -65,6 +65,10 @@ async function resendCode() {
   }
 }
 
+onMounted(() => {
+  resendCode()
+})
+
 </script>
 
 <template>
