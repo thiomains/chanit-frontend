@@ -4,6 +4,7 @@ let inputDisabled = ref(false)
 const config = useRuntimeConfig()
 const session = useState("session")
 let inputValue = ref([])
+const { $refreshUser } = useNuxtApp()
 
 async function inputComplete() {
   inputDisabled.value = true
@@ -26,7 +27,9 @@ async function inputComplete() {
       }
     })
 
-    navigateTo({
+    await $refreshUser()
+
+    await navigateTo({
       path: "/"
     })
   } catch (e) {
