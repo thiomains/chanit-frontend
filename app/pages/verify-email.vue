@@ -73,7 +73,7 @@ onMounted(() => {
 
 <template>
   <div class="w-screen h-screen flex items-center justify-center">
-    <UCard>
+    <UCard variant="subtle">
       <template #header>
         <h1 class="font-bold">Verify Your E-Mail Address</h1>
       </template>
