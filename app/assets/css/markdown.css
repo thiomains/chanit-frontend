@@ -12,12 +12,12 @@
 }
     .markdown-body {
         --focus-outlineColor: #1f6feb;
-        --fgColor-default: #f0f6fc;
-        --fgColor-muted: #9198a1;
-        --fgColor-accent: #4493f8;
-        --fgColor-success: #3fb950;
-        --fgColor-attention: #d29922;
-        --fgColor-danger: #f85149;
+        --fgColor-default: var(--ui-text);
+        --fgColor-muted: var(--ui-text-muted);
+        --fgColor-accent: var(--ui-text-highlighted);
+        --fgColor-success: var(--color-success);
+        --fgColor-attention: var(--color-warning);
+        --fgColor-danger: var(--color-error);
         --fgColor-done: #ab7df8;
         --bgColor-default: #00000000;
         --bgColor-muted: #151b23;
