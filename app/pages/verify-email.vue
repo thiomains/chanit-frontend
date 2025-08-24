@@ -6,6 +6,7 @@ const session = useState("session")
 let inputValue = ref([])
 
 async function inputComplete() {
+  inputDisabled.value = true
   let userSession = session.value as {
     session: {
       accessToken: string,
@@ -31,6 +32,12 @@ async function inputComplete() {
   } catch (e) {
     let error = e as any
     errorMsg.value = error.data.error
+    if (error.data.error === "Account e-mail address already verified") {
+      navigateTo({
+        path: "/"
+      })
+    }
+    inputDisabled.value = false
   }
 }
 
