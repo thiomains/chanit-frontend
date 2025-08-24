@@ -45,15 +45,27 @@ export default defineNuxtPlugin(async () => {
     }
 
     const refreshUser = async () => {
-        const meRes = await $fetch(config.public.apiBaseUrl + '/auth/me', {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${session.value.session.accessToken}`,
-                Session: session.value.session.sessionId
-            }
-        })
+        try {
+            const meRes = await $fetch(config.public.apiBaseUrl + '/auth/me', {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${session.value.session.accessToken}`,
+                    Session: session.value.session.sessionId
+                }
+            })
 
-        session.value.user = meRes;
+            session.value.user = meRes;
+        } catch (e) {
+            if (e.data.error === "E-Mail address not verified") {
+                await navigateTo({
+                    path: "/verify-email"
+                })
+                return
+            }
+            await navigateTo({
+                path: "/login"
+            })
+        }
     }
 
     await checkToken()
