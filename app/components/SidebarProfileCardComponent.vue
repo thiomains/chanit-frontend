@@ -10,7 +10,7 @@ const session = sessionState.value as {
 
 function avatarUrl() {
   let url = session.user.profilePictureUrl
-  url = url ? url : "https://cdn.minescope.eu/attachments/76509151861145600/78839340859392000/78839341262045184/Download%20(17).png"
+  url = url ? url : "https://images.dog.ceo/breeds/hound-walker/n02089867_2596.jpg"
   url = url + "?max=40"
   return url
 }

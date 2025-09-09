@@ -14,7 +14,7 @@ const md = new MarkdownIt({
 }).disable(['hr', 'image'])
 
 let avatarUrl = ref(message.value.author.profilePictureUrl)
-if (avatarUrl.value === "") avatarUrl.value = "https://cdn.minescope.eu/attachments/76509151861145600/78839340859392000/78839341262045184/Download%20(17).png"
+if (avatarUrl.value === "") avatarUrl.value = "https://images.dog.ceo/breeds/hound-walker/n02089867_2596.jpg"
 
 </script>
 

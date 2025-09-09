@@ -130,7 +130,7 @@ async function removeAvatar(close: any) {
 function avatarUrl() {
   let suffix = ""
   if (!imgSrc.value.startsWith("blob")) suffix = "?size=300"
-  return imgSrc.value === "" ? "https://cdn.minescope.eu/attachments/76509151861145600/78839340859392000/78839341262045184/Download%20(17).png?size=300" : imgSrc.value + suffix
+  return imgSrc.value === "" ? "https://images.dog.ceo/breeds/hound-walker/n02089867_2596.jpg" : imgSrc.value + suffix
 }
 
 </script>
