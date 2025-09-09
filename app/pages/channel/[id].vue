@@ -143,7 +143,7 @@ function scrollToBottom(force) {
 let fetchingMessages = ref(true)
 async function handleScroll(event) {
   if (messages.value.length === 0) return
-  if (event.srcElement.scrollTop < 1000) {
+  if (event.srcElement.scrollTop < 100) {
     if (fetchingMessages.value) return
 
     fetchingMessages.value = true
