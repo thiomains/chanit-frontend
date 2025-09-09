@@ -2,7 +2,7 @@
 
 const { $connectWebsocket } = useNuxtApp()
 const toast = useToast()
-const audio = new Audio("https://cdn.minescope.eu/static/notification.ogg")
+const audio = new Audio("https://cdn.faser.app/chanit/static/notification.ogg")
 
 
 
