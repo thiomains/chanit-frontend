@@ -2,7 +2,7 @@
 @import "@nuxt/ui";
 
 :root {
-    --ui-radius: 0.6rem;
+    --ui-radius: 0.35rem;
 }
 
 body {
