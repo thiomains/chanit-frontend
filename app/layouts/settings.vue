@@ -24,7 +24,7 @@ backRoute.value = backRoute.value ? backRoute.value : "/"
 
 <template>
   <div class="flex gap-8 p-10 h-screen 2xl:w-[96rem] w-full mx-auto">
-    <UNavigationMenu orientation="vertical" :items="items" class="data-[orientation=vertical]:w-64" />
+    <UNavigationMenu orientation="vertical" :items="items" class="data-[orientation=vertical]:w-64" color="neutral" />
     <USeparator orientation="vertical" />
     <div class="flex-1">
       <slot />

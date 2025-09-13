@@ -76,10 +76,11 @@ async function faserLogin() {
         @click="faserLogin"
         variant="subtle"
         :avatar="{
-            src: 'https://cdn.faser.app/static/logo.png?size=32'
+            src: 'https://cdn.faser.app/faser/static/logo.png?size=32'
           }"
         label="Log in with faser"
         block
+        class="text-faser ring ring-inset ring-faser/25 bg-faser/10 hover:bg-faser/15 active:bg-faser/15 disabled:bg-faser/10 aria-disabled:bg-faser/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-faser"
     />
 
   </UCard>
