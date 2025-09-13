@@ -12,6 +12,19 @@ async function prepare() {
   }
 
   showLoading.value = false
+  websocketConnection()
+}
+
+function websocketConnection() {
+  setInterval(async () => {
+    if (route.path === "/login") return
+    try {
+      const ws = await $connectWebsocket()
+      showLoading.value = !ws || ws.readyState !== WebSocket.OPEN;
+    } catch (e) {
+      showLoading.value = true
+    }
+  }, 1000)
 }
 
 onMounted( async () => {
