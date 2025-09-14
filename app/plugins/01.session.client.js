@@ -30,10 +30,10 @@ export default defineNuxtPlugin(async () => {
 
         let sessionValid
 
-        if (session || session.value.session === null) {
+        if (!session || session.value.session === null) {
             sessionValid = !!(await refreshToken());
         }
-        else if (session.value.session.expiresAt - 60000 < Date.now()) {
+        else if (session.value.session.expiresAt - 30000 < Date.now()) {
             sessionValid = !!(await refreshToken());
         }
 

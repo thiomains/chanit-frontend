@@ -31,7 +31,7 @@ onMounted( async () => {
   await prepare()
   setInterval(() => {
     if (route.path !== "/login") $checkToken()
-  }, 60000)
+  }, 10000)
 })
 </script>
 
