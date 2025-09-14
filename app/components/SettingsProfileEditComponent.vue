@@ -55,6 +55,8 @@ function fileToBase64(file: File) {
 let updateButtonDisabled = ref(false)
 let removePictureButtonDisabled = ref(false)
 
+let errorMessage = ref("")
+
 const { $refreshUser } = useNuxtApp()
 
 async function updateProfile(close: any) {
@@ -97,7 +99,9 @@ async function updateProfile(close: any) {
     updateButtonDisabled.value = false
 
   } catch (e) {
-    console.log(e)
+    const error = e as any
+    errorMessage.value = error.data.error
+    updateButtonDisabled.value = false
   }
 }
 
@@ -174,9 +178,13 @@ function avatarUrl() {
             <UInput v-model="newUsername" class="w-full" size="xl" />
           </div>
           <div class="mb-4">
-            <p class="text-sm text-muted">Bio</p>
+            <div class="flex justify-between">
+              <p class="text-sm text-muted">Bio</p>
+              <p class="text-sm text-muted">{{ newBio.length }}/400</p>
+            </div>
             <UTextarea v-model="newBio" autoresize class="w-full" size="xl" />
           </div>
+          <p class="m-2 mb-4 text-error">{{ errorMessage }}</p>
           <UButton :loading="updateButtonDisabled" @click="updateProfile(close)" class="mb-2" block label="Update Profile" />
           <br>
           <UButton @click="resetProfileUpdate" block variant="link" label="Revert changes" />
