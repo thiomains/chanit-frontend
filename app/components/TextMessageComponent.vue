@@ -22,11 +22,15 @@ if (avatarUrl.value === "") avatarUrl.value = "https://images.dog.ceo/breeds/hou
   <MessageContextMenuComponent :message="message">
     <div class="flex gap-4 hover:bg-[var(--ui-bg-muted)] py-0.5 px-4" :class="{ 'mt-4': !grouped }">
       <div class="w-10">
-        <UAvatar v-if="!grouped" :src="avatarUrl + '?size=40'" size="xl" />
+        <ProfilePopover :user="message.author">
+          <UAvatar v-if="!grouped" :src="avatarUrl + '?size=40'" size="xl" />
+        </ProfilePopover>
       </div>
       <div class="w-5/6">
         <div v-if="!grouped" class="flex items-end gap-2">
-          <p class="font-bold">{{ message.author.username }}</p>
+          <ProfilePopover :user="message.author">
+            <p class="font-bold hover:underline">{{ message.author.username }}</p>
+          </ProfilePopover>
           <p class="text-dimmed text-sm" >{{ new Date(message.createdAt).toLocaleTimeString().substring(0, 5) }}</p>
         </div>
         <div v-html="md.render(message.body)" class="break-words break-all w-full markdown-body" />
