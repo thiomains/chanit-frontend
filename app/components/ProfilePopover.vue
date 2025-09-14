@@ -30,7 +30,7 @@ const md = new MarkdownIt({
           <NuxtImg :src="props.user.profilePictureUrl + '?max=48'" class=" h-12 w-12 shrink-0 rounded-full"/>
           <h2 class="text-xl font-bold">{{ props.user.username }}</h2>
         </div>
-        <USeparator class="m-4" />
+        <USeparator class="py-4" />
         <div v-html="md.render(props.user.bio)" class="w-full markdown-body" />
         <p class="text-dimmed text-sm mt-4">Using Chanit since {{ DateTime.fromJSDate(new Date(props.user.createdAt)).toLocaleString()  }}</p>
       </UCard>
