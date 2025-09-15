@@ -4,13 +4,17 @@ let registerVisible = ref(false);
 
 const route = useRoute()
 
-if (route.query.register === "true") {
-  registerVisible.value = true;
-}
+
 
 function toggleRegisterVisible() {
   registerVisible.value = !registerVisible.value;
 }
+
+onMounted(() => {
+  if (!!route.query.register) {
+    registerVisible.value = true;
+  }
+})
 
 </script>
 

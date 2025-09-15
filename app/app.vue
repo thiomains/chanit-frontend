@@ -24,7 +24,7 @@ onMounted( async () => {
     return
   }
   if (path === "/register") {
-    await navigateTo('/login?register')
+    await navigateTo('/login?register=1')
     window.location.reload()
     return
   }
