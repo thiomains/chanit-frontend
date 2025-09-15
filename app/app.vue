@@ -7,7 +7,7 @@ let showLoading = ref(true)
 
 function websocketConnection() {
   setInterval(async () => {
-    if (route.path === "/login") return
+    if (route.path === "/login" || path === "/verify-email" || path === "/auth") return
     try {
       const ws = await $connectWebsocket()
       showLoading.value = !ws || ws.readyState !== WebSocket.OPEN;
