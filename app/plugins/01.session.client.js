@@ -91,8 +91,6 @@ export default defineNuxtPlugin(async () => {
         }
     }
 
-    // await checkToken()
-
     return {
         provide : {
             startRefreshTimer,
