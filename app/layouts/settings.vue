@@ -18,7 +18,7 @@ const items = ref<NavigationMenuItem[][]>([
 
 const route = useRoute()
 let backRoute = ref(route.query.back as string)
-backRoute.value = backRoute.value ? backRoute.value : "/"
+backRoute.value = backRoute.value ? backRoute.value : "/channels/me"
 
 </script>
 

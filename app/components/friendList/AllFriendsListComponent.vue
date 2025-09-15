@@ -51,7 +51,7 @@ onMounted(() => {
           </div>
           <UButtonGroup size="lg">
             <UTooltip :delay-duration="0" text="Direct Message">
-              <UButton :href="'/channel/' + friend.directChannelId" variant="subtle" color="neutral" icon="material-symbols:chat" />
+              <UButton :href="'/channels/me/' + friend.directChannelId" variant="subtle" color="neutral" icon="material-symbols:chat" />
             </UTooltip>
             <UTooltip :delay-duration="0" text="Start Voice Call">
               <UButton variant="subtle" color="neutral" icon="material-symbols:call" />

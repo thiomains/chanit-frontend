@@ -1,19 +1,9 @@
 <script setup>
 const session = useState("session")
-const { $checkToken, $connectWebsocket } = useNuxtApp()
+const { $connect, $startRefreshTimer, $connectWebsocket } = useNuxtApp()
 const route = useRoute()
 
 let showLoading = ref(true)
-
-async function prepare() {
-  if (route.path !== "/auth") {
-    if (await $checkToken())
-      await $connectWebsocket()
-  }
-
-  showLoading.value = false
-  websocketConnection()
-}
 
 function websocketConnection() {
   setInterval(async () => {
@@ -28,10 +18,27 @@ function websocketConnection() {
 }
 
 onMounted( async () => {
-  await prepare()
-  setInterval(() => {
-    if (route.path !== "/login") $checkToken()
-  }, 10000)
+  let path = route.path
+  if (path === "/login" || path === "/verify-email" || path === "/auth") {
+    showLoading.value = false
+    return
+  }
+  if (path === "/register") {
+    await navigateTo('/login?register')
+    window.location.reload()
+    return
+  }
+  navigateTo('/app')
+  await $connect()
+  let ws = await $connectWebsocket()
+  $startRefreshTimer()
+  while (!ws) ws = await $connectWebsocket()
+  websocketConnection()
+  if (path === "/app") path = "/channels/me"
+  await navigateTo({
+    path: path
+  })
+  showLoading.value = false
 })
 </script>
 

@@ -22,7 +22,6 @@ const state = reactive({
 
 const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  toast.add({ title: 'Success', description: 'The form has been submitted.', color: 'success' })
   await register(event.data.username, event.data.email, event.data.password)
 }
 
@@ -39,11 +38,14 @@ async function register(username: string, email: string, password: string) {
       credentials: "include"
     })
 
-    await $checkToken()
-    await navigateTo('/')
+    await navigateTo({
+      path: '/app'
+    })
+    window.location.reload()
   } catch (e) {
     const error = e as any
     console.log(error.data.error)
+    toast.add({ title: 'Login failed', description: error.data.error, color: 'error' })
   }
 }
 
@@ -83,10 +85,11 @@ async function faserLogin() {
         @click="faserLogin"
         variant="subtle"
         :avatar="{
-            src: 'https://cdn.faser.app/static/logo.png?size=32'
+            src: 'https://cdn.faser.app/faser/static/logo.png?size=32'
           }"
         label="Log in with faser"
         block
+        class="text-faser ring ring-inset ring-faser/25 bg-faser/10 hover:bg-faser/15 active:bg-faser/15 disabled:bg-faser/10 aria-disabled:bg-faser/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-faser"
     />
 
   </UCard>

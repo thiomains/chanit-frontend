@@ -22,11 +22,11 @@ onMounted( async () => {
       credentials: "include"
     })
 
-    await $checkToken()
-
-    navigateTo({
-      path: '/'
+    await navigateTo({
+      path: '/app'
     })
+    window.location.reload()
+
   } catch (e) {
     console.log(e)
   }
