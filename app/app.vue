@@ -7,7 +7,7 @@ let showLoading = ref(true)
 
 function websocketConnection() {
   setInterval(async () => {
-    if (route.path === "/login" || path === "/verify-email" || path === "/auth") return
+    if (route.path === "/login" || route.path === "/verify-email" || route.path === "/auth" || route.path === "/" || route.path === "/logout") return
     try {
       const ws = await $connectWebsocket()
       showLoading.value = !ws || ws.readyState !== WebSocket.OPEN;
@@ -19,7 +19,7 @@ function websocketConnection() {
 
 onMounted( async () => {
   let path = route.path
-  if (path === "/login" || path === "/verify-email" || path === "/auth") {
+  if (path === "/login" || path === "/verify-email" || path === "/auth" || path === "/" || path === "/logout") {
     showLoading.value = false
     return
   }
