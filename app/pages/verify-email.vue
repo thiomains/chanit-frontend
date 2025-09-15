@@ -4,7 +4,7 @@ let inputDisabled = ref(false)
 const config = useRuntimeConfig()
 const session = useState("session")
 let inputValue = ref([])
-const { $refreshUser, $refreshSession } = useNuxtApp()
+const { $refreshSession } = useNuxtApp()
 
 async function inputComplete() {
   inputDisabled.value = true
