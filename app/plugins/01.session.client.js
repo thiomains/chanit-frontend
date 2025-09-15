@@ -67,11 +67,6 @@ export default defineNuxtPlugin(async () => {
         }
     }
 
-    const checkToken = async () => {
-
-
-    }
-
     const refreshUser = async () => {
         try {
             const meRes = await $fetch(config.public.apiBaseUrl + '/auth/me', {
