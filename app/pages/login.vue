@@ -4,15 +4,24 @@ let registerVisible = ref(false);
 
 const route = useRoute()
 
-
-
 function toggleRegisterVisible() {
   registerVisible.value = !registerVisible.value;
 }
 
-onMounted(() => {
+const { $refreshSession } = useNuxtApp()
+
+onMounted(async () => {
   if (!!route.query.register) {
     registerVisible.value = true;
+  }
+  const session = await $refreshSession() as {
+    error?: {}
+  }
+  if (!session.error) {
+    await navigateTo({
+      path: "/app"
+    })
+    window.location.reload()
   }
 })
 
