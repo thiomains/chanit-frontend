@@ -4,7 +4,7 @@ let inputDisabled = ref(false)
 const config = useRuntimeConfig()
 const session = useState("session")
 let inputValue = ref([])
-const { $refreshUser } = useNuxtApp()
+const { $refreshSession } = useNuxtApp()
 
 async function inputComplete() {
   inputDisabled.value = true
@@ -27,11 +27,11 @@ async function inputComplete() {
       }
     })
 
-    await $refreshUser()
-
     await navigateTo({
-      path: "/"
+      path: "/app"
     })
+    window.location.reload()
+
   } catch (e) {
     let error = e as any
     errorMsg.value = error.data.error
@@ -61,12 +61,13 @@ async function resendCode() {
     })
   } catch (e) {
     let error = e as any
-    console.log(error.data.error)
+    console.log(error)
   }
 }
 
-onMounted(() => {
-  resendCode()
+onMounted(async () => {
+  await $refreshSession()
+  await resendCode()
 })
 
 </script>

@@ -8,8 +8,49 @@ export default defineNuxtPlugin(async () => {
     }))
     const config = useRuntimeConfig()
 
-    const refreshToken = async () => {
+    async function connect() {
+        const sessionRes = await refreshSession()
+        if (sessionRes.error) {
+            if (sessionRes.error.status === 401) {
+                await navigateTo({
+                    path: '/login'
+                })
+                window.location.reload()
+                return
+            }
+            return
+        }
+        session.value.session = sessionRes
+        const meRes = await refreshUser()
+        if (meRes.error) {
+            if (meRes.error.status === 403) {
+                if (meRes.error.data.error === "E-Mail address not verified") {
+                    await navigateTo({
+                        path: '/verify-email'
+                    })
+                    window.location.reload()
+                    return
+                }
+            }
+            return
+        }
+        session.value.user = meRes
+    }
 
+    async function startRefreshTimer() {
+        setInterval(async () => {
+            if (!session || session.value.session === null) {
+                await refreshSession()
+            } else if (session.value.session.expiresAt - 15000 < Date.now()) {
+                await refreshSession()
+            }
+            if (session.value.session && !session.value.user) {
+                await refreshUser()
+            }
+        }, 10000)
+    }
+
+    async function refreshSession() {
         try {
             const res = await $fetch(config.public.apiBaseUrl + '/auth/session/refresh', {
                 method: "POST",
@@ -17,31 +58,13 @@ export default defineNuxtPlugin(async () => {
             })
 
             session.value.session = res
-
-            return true;
+            return res;
 
         } catch (e) {
-            await navigateTo({path: '/login'});
-            return false;
+            return {
+                error: e
+            };
         }
-    }
-
-    const checkToken = async () => {
-
-        let sessionValid
-
-        if (!session || session.value.session === null) {
-            sessionValid = !!(await refreshToken());
-        }
-        else if (session.value.session.expiresAt - 30000 < Date.now()) {
-            sessionValid = !!(await refreshToken());
-        }
-
-        if (sessionValid && !session.value.user) {
-            await refreshUser()
-        }
-
-        return sessionValid;
     }
 
     const refreshUser = async () => {
@@ -54,25 +77,20 @@ export default defineNuxtPlugin(async () => {
                 }
             })
 
-            session.value.user = meRes;
+            session.value.user = meRes
+            return meRes;
         } catch (e) {
-            if (e.data.error === "E-Mail address not verified") {
-                await navigateTo({
-                    path: "/verify-email"
-                })
-                return
+            return {
+                error: e
             }
-            await navigateTo({
-                path: "/login"
-            })
         }
     }
 
-    await checkToken()
-
     return {
         provide : {
-            checkToken,
+            startRefreshTimer,
+            connect,
+            refreshSession,
             refreshUser
         }
     }

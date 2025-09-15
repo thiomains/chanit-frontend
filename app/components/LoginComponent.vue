@@ -34,11 +34,11 @@ async function login(email: string, password: string) {
       credentials: "include"
     })
 
-    await $checkToken()
-    await navigateTo('/')
+    await navigateTo('/app')
+    window.location.reload()
   } catch (e) {
     const error = e as any
-    console.log(error.data.error)
+    if (!error.data.error) return
     toast.add({ title: 'Login failed', description: error.data.error, color: 'error' })
   }
 }
