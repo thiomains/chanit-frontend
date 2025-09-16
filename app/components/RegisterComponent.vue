@@ -7,7 +7,13 @@ const config = useRuntimeConfig()
 const { $checkToken } = useNuxtApp()
 
 const schema = v.object({
-  username: v.pipe(v.string(), v.minLength(3, 'Must be at least 3 characters'), v.maxLength(16, 'Must be no longer than 16 characters')),
+  username: v.pipe(
+      v.string(),
+      v.minLength(3, "Must be at least 3 characters"),
+      v.maxLength(24, "Must not be longer than 24 characters"),
+      v.regex(/^[a-z]/, "Must start with a letter"),
+      v.regex(/^[a-z][0-9a-z_.]{2,23}$/,"Only lowercase letters, numbers, dots and underscores"),
+  ),
   email: v.pipe(v.string(), v.email('Invalid email')),
   password: v.pipe(v.string(), v.minLength(8, 'Must be at least 8 characters'))
 })
