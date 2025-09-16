@@ -57,25 +57,25 @@ async function faserLogin() {
 
 <template>
 
-  <UCard variant="subtle">
+  <UCard variant="subtle" class="min-w-sm">
     <template #header>
       <h1 class="text-2xl">Register</h1>
     </template>
 
     <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
       <UFormField label="Username" name="username">
-        <UInput v-model="state.username" />
+        <UInput v-model="state.username" class="w-full" size="xl" />
       </UFormField>
 
       <UFormField label="Email" name="email">
-        <UInput v-model="state.email" />
+        <UInput v-model="state.email" class="w-full" size="xl" />
       </UFormField>
 
       <UFormField label="Password" name="password">
-        <UInput v-model="state.password" type="password" />
+        <UInput v-model="state.password" type="password" class="w-full" size="xl" />
       </UFormField>
 
-      <UButton type="submit" label="Create your account" block/>
+      <UButton type="submit" label="Create your account" block size="xl" />
 
     </UForm>
 
@@ -89,6 +89,7 @@ async function faserLogin() {
           }"
         label="Log in with faser"
         block
+        size="xl"
         class="text-faser ring ring-inset ring-faser/25 bg-faser/10 hover:bg-faser/15 active:bg-faser/15 disabled:bg-faser/10 aria-disabled:bg-faser/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-faser"
     />
 
