@@ -28,7 +28,7 @@ onMounted( async () => {
     window.location.reload()
     return
   }
-  navigateTo('/app')
+  await navigateTo('/app')
   await $connect()
   let ws = await $connectWebsocket()
   $startRefreshTimer()
