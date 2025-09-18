@@ -46,9 +46,7 @@ onMounted( async () => {
   <LoadingScreenComponent v-if="showLoading" class="h-screen" />
   <div v-else>
     <UApp>
-      <NuxtLayout>
-        <NuxtPage class="h-full w-full" />
-      </NuxtLayout>
+      <NuxtPage class="h-full w-full" />
     </UApp>
   </div>
 

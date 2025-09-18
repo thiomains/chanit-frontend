@@ -1,8 +1,4 @@
 <script setup>
-definePageMeta({
-  layout: 'sidebar'
-})
-
 const config = useRuntimeConfig()
 const route = useRoute()
 const session = useState('session')
@@ -167,33 +163,31 @@ async function handleScroll(event) {
 </script>
 
 <template>
-  <div class="w-full h-full flex gap-2">
-    <div class="w-full h-full flex flex-col">
-      <UCard variant="subtle">
-        <div class="flex items-center gap-2">
-          <UAvatar src="https://images.dog.ceo/breeds/puggle/IMG_075018.jpg" />
-          <p class="font-bold">{{ channelName }}</p>
-        </div>
-      </UCard>
-      <div class="flex-1 overflow-y-scroll flex flex-col" ref="messagesContainer" @scroll="handleScroll">
-        <div :key="message.messageId" v-for="( message, i ) in messages">
-          <USeparator
-              class="mt-4"
-              v-if="!isSameDay(message, messages[i-1])"
-              :label="DateTime.fromJSDate(
+  <NuxtLayout name="sidebar">
+    <template #header>
+      <UAvatar src="https://images.dog.ceo/breeds/puggle/IMG_075018.jpg" />
+      <p class="font-bold">{{ channelName }}</p>
+    </template>
+
+    <div class="flex-1 flex flex-col overflow-auto" ref="messagesContainer" @scroll="handleScroll">
+      <div :key="message.messageId" v-for="( message, i ) in messages">
+        <USeparator
+            class="mt-4"
+            v-if="!isSameDay(message, messages[i-1])"
+            :label="DateTime.fromJSDate(
                   new Date(message.createdAt)
                   ).toRelativeCalendar({
                   locale: 'en-US'
               })"/>
-          <TextMessageComponent :grouped="isGrouped(message, messages[i-1])" :message="message"/>
-        </div>
+        <TextMessageComponent :grouped="isGrouped(message, messages[i-1])" :message="message"/>
       </div>
-      <TextChannelInputComponent />
     </div>
-    <!-- <div>
-      <USkeleton class="w-xs h-full" />
-    </div> -->
-  </div>
+
+    <template #footer>
+      <TextChannelInputComponent />
+    </template>
+
+  </NuxtLayout>
 </template>
 
 <style scoped>
