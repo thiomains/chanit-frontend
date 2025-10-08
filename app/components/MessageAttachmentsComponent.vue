@@ -19,7 +19,7 @@ for (let i = 0; i < attachments.length; i++) {
   let attachment = attachments[i] as Attachment
   if (attachment.url === "") continue
   if (attachment.mimetype.startsWith("image")) {
-    imageAttachments.value.push(attachment.url)
+    imageAttachments.value.push(attachment.url + '?max=320')
     continue
   }
   otherAttachments.value.push(attachment)

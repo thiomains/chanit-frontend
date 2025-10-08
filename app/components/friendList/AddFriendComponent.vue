@@ -41,10 +41,10 @@ let errorMessage = ref("")
 
 <template>
   <UCard class="m-1">
-    <UButtonGroup class="w-full" size="lg">
+    <UFieldGroup class="w-full" size="lg">
       <UInput class="w-full" color="primary" placeholder="Enter a username..." v-model="username" autocomplete="off"/>
       <UButton :disabled="addFriendsDisabled" @click="addFriend" label="Add Friend" icon="material-symbols:person-add" />
-    </UButtonGroup>
+    </UFieldGroup>
     <p v-if="errorMessage !== ''" class="mt-4" :class="messageColor" >{{ errorMessage }}</p>
   </UCard>
 </template>

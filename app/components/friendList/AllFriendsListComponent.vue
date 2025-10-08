@@ -49,14 +49,14 @@ onMounted(() => {
             <p class="font-bold">{{ friend.user.username }}</p>
             <p class="text-[var(--ui-text-muted)]">Online</p>
           </div>
-          <UButtonGroup size="lg">
+          <UFieldGroup size="lg">
             <UTooltip :delay-duration="0" text="Direct Message">
               <UButton :href="'/channels/me/' + friend.directChannelId" variant="subtle" color="neutral" icon="material-symbols:chat" />
             </UTooltip>
             <UTooltip :delay-duration="0" text="Start Voice Call">
               <UButton variant="subtle" color="neutral" icon="material-symbols:call" />
             </UTooltip>
-          </UButtonGroup>
+          </UFieldGroup>
         </div>
       </div>
     </div>

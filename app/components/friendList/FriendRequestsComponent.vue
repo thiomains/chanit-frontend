@@ -94,14 +94,14 @@ async function acceptRequest(request: FriendRequest) {
             <p class="font-bold">{{ request.sender.username }}</p>
             <p class="text-[var(--ui-text-muted)]">Online</p>
           </div>
-          <UButtonGroup size="lg">
+          <UFieldGroup size="lg">
             <UTooltip :delay-duration="0" text="Accept">
               <UButton @click="acceptRequest(request)" variant="subtle" color="neutral" icon="material-symbols:check"/>
             </UTooltip>
             <UTooltip :delay-duration="0" text="Decline">
               <UButton @click="cancelRequest(request)" variant="subtle" color="neutral" icon="material-symbols:close"/>
             </UTooltip>
-          </UButtonGroup>
+          </UFieldGroup>
         </div>
       </div>
     </div>
@@ -117,11 +117,11 @@ async function acceptRequest(request: FriendRequest) {
             <p class="font-bold">{{ request.recipient.username }}</p>
             <p class="text-[var(--ui-text-muted)]">Online</p>
           </div>
-          <UButtonGroup size="lg">
+          <UFieldGroup size="lg">
             <UTooltip :delay-duration="0" text="Cancel">
               <UButton @click="cancelRequest(request)" variant="subtle" color="neutral" icon="material-symbols:close"/>
             </UTooltip>
-          </UButtonGroup>
+          </UFieldGroup>
         </div>
       </div>
     </div>
