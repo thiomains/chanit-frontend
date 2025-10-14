@@ -46,19 +46,9 @@ function downloadAttachment(attachment: Attachment) {
 </script>
 
 <template>
-  <UCarousel
-      v-if="imageAttachments.length > 0"
-      v-slot="{ item }"
-      :items="imageAttachments"
-      class="w-xs items-center justify-center border border-accented rounded-lg mb-10 bg-default"
-      wheel-gestures
-      arrows
-      dots
-  >
-    <div @click="showModal(item)" class="flex h-[20rem] w-xs justify-center items-center rounded-lg overflow-hidden">
-      <NuxtImg :src="item + '?size=320'" :placeholder="item + '?size=32'" class="h-full w-full object-cover" placeholder-class="blur-2xl object-cover" />
-    </div>
-  </UCarousel>
+  <div class="flex flex-wrap max-w-xl overflow-clip gap-1" v-if="imageAttachments.length > 0">
+    <NuxtImg @click="showModal(image)" v-for="image in imageAttachments" :src="image as string + (imageAttachments.length > 1 ? '?max=140h' : '?max=280h')" alt="" :class="{ 'h-40': imageAttachments.length > 1 }" class="shrink object-contain"/>
+  </div>
   <UModal
       class="bg-transparent"
       v-model:open="modalOpen"
