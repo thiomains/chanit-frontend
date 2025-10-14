@@ -6,7 +6,6 @@
   <UCard class="w-full grow">
     <div class="flex flex-col gap-2 mb-4">
       <UButton size="xl" to="/channels/me" label="Friends" active-variant="subtle" color="neutral" variant="ghost" icon="material-symbols:group"/>
-      <UButton size="xl" to="/logout" label="Log out" active-variant="subtle" color="neutral" variant="ghost" icon="material-symbols:exit-to-app"/>
     </div>
     <USeparator/>
     <div class="flex flex-col gap-2 mb-4">

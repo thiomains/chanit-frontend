@@ -2,19 +2,25 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 
 const items = ref<NavigationMenuItem[][]>([
-  [
-    {
-    label: 'Account Settings',
-    icon: 'material-symbols:manage-accounts',
-    to: '/settings/account'
-  },
-    {
-      label: 'Profile',
-      icon: 'material-symbols:person-book',
-      to: '/settings/profile'
-    },
-  ],
-])
+      [
+        {
+          label: 'Account Settings',
+          icon: 'material-symbols:manage-accounts',
+          to: '/settings/account'
+        },
+        {
+          label: 'Profile',
+          icon: 'material-symbols:person-book',
+          to: '/settings/profile'
+        },
+        {
+          label: 'Log out',
+          icon: 'material-symbols:exit-to-app',
+          to: '/logout',
+          color: 'error'
+        }
+      ],
+    ])
 
 const route = useRoute()
 let backRoute = ref(route.query.back as string)
