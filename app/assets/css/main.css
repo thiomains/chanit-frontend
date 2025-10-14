@@ -33,10 +33,6 @@
     --ui-border-inverted: oklch(0.95 0.05 279);
 }
 
-body {
-    overflow: hidden;
-}
-
 html {
     scrollbar-color: var(--ui-bg-muted) rgba(0, 0, 0, 0);
     scrollbar-width: thin;
