@@ -19,7 +19,7 @@ for (let i = 0; i < attachments.length; i++) {
   let attachment = attachments[i] as Attachment
   if (attachment.url === "") continue
   if (attachment.mimetype.startsWith("image")) {
-    imageAttachments.value.push(attachment.url + '?max=320')
+    imageAttachments.value.push(attachment.url)
     continue
   }
   otherAttachments.value.push(attachment)
@@ -56,7 +56,7 @@ function downloadAttachment(attachment: Attachment) {
       dots
   >
     <div @click="showModal(item)" class="flex h-[20rem] w-xs justify-center items-center rounded-lg overflow-hidden">
-      <NuxtImg :src="item + ''" :placeholder="item + '?max=32'" class="h-full w-full object-cover" placeholder-class="blur-2xl object-cover" />
+      <NuxtImg :src="item + '?size=320'" :placeholder="item + '?size=32'" class="h-full w-full object-cover" placeholder-class="blur-2xl object-cover" />
     </div>
   </UCarousel>
   <UModal
