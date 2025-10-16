@@ -9,9 +9,9 @@
     <template #left>
       <p class="text-muted text-sm">Copyright © {{ new Date().getFullYear() }}</p>
     </template>
-    <div class="gap-2 flex">
-      <UButton icon="material-symbols:open-in-new" to="/impressum" label="Impressum - Legal Notice" variant="link" color="neutral"/>
-      <UButton icon="material-symbols:open-in-new" to="/privacy" label="Datenschutzerklärung - Privacy Policy" variant="link" color="neutral"/>
+    <div class="gap-2 flex flex-col lg:flex-row">
+      <UButton icon="material-symbols:open-in-new" to="/impressum" label="Legal Notice" variant="link" color="neutral"/>
+      <UButton icon="material-symbols:open-in-new" to="/privacy" label="Privacy Policy" variant="link" color="neutral"/>
       <UButton icon="material-symbols:open-in-new" to="/terms" label="Terms of Service" variant="link" color="neutral"/>
     </div>
     <template #right>
