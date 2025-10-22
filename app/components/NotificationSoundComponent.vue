@@ -2,7 +2,7 @@
 
 const { $connectWebsocket } = useNuxtApp()
 const toast = useToast()
-const audio = new Audio("https://cdn.faser.app/chanit/static/notification.ogg")
+const audio = new Audio("https://cdn.faser.app/chanit/chanit-static-files/notification.ogg")
 
 
 
@@ -19,11 +19,11 @@ onMounted(async () => {
     if (!("Notification" in window)) {
       alert("This browser does not support desktop notification");
     } else if (Notification.permission === "granted") {
-      const notification = new Notification("Hi there!", options);
+      const notification = new Notification(message.content.author.username, options);
     } else if (Notification.permission !== "denied") {
       Notification.requestPermission().then((permission) => {
         if (permission === "granted") {
-          const notification = new Notification("Hi there!", options);
+          const notification = new Notification(message.content.author.username, options);
         }
       });
     }
