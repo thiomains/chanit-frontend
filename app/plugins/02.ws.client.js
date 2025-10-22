@@ -29,6 +29,10 @@ export default defineNuxtPlugin(() => {
                         type: "client-connection"
                     }))
                     resolve(ws)
+                } else if (message.type === "ping") {
+                    ws.send(JSON.stringify({
+                        type: "pong"
+                    }))
                 }
             }
 
