@@ -130,7 +130,7 @@ onMounted(async () => {
         <p class="font-bold text-xl">Friends</p>
       </template>
       <template #default>
-        <div>
+        <div class="flex flex-col gap-1 lg: gap-4">
           <div v-for="friend of user.friends">
             <NuxtLink :to="'/admin/users/' + friend.user.userId">
               <UCard variant="subtle">
