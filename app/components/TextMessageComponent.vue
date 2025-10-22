@@ -33,7 +33,7 @@ if (avatarUrl.value === "") avatarUrl.value = "https://images.dog.ceo/breeds/hou
           </ProfilePopover>
           <p class="text-dimmed text-sm" >{{ new Date(message.createdAt).toLocaleTimeString().substring(0, 5) }}</p>
         </div>
-        <div v-html="md.render(message.body)" class="break-words break-all w-full markdown-body" />
+        <div v-html="md.render(message.body)" class="break-words break-all w-full markdown-body" /><p v-if="message.lastEdited" class="text-dimmed text-sm">(edited)</p>
         <MessageAttachmentsComponent :attachments="message.attachments" />
       </div>
     </div>

@@ -83,6 +83,7 @@ onMounted(async () => {
     const message = JSON.parse(event.data)
     if (message.type === "message") messageSentReceived(message)
     if (message.type === "message-delete") messageDeletedReceived(message)
+    if (message.type === "message-edit") messageEditedReceived(message)
   })
 })
 
@@ -99,6 +100,15 @@ function messageDeletedReceived(message) {
     const msg = messages.value[i]
     if (msg.messageId !== message.messageId) continue
     messages.value.splice(i, 1)
+  }
+}
+
+function messageEditedReceived(message) {
+  for (let i = 0; i < messages.value.length; i++) {
+    const msg = messages.value[i]
+    if (msg.messageId !== message.messageId) continue
+    messages.value[i].body = message.body
+    messages.value[i].lastEdited = message.lastEdited
   }
 }
 
