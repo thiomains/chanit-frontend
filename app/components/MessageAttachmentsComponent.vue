@@ -46,8 +46,8 @@ function downloadAttachment(attachment: Attachment) {
 </script>
 
 <template>
-  <div class="flex flex-wrap max-w-xl overflow-clip gap-1" v-if="imageAttachments.length > 0">
-    <NuxtImg @click="showModal(image)" v-for="image in imageAttachments" :src="image as string + (imageAttachments.length > 1 ? '?max=140h' : '?max=280h')" alt="" :class="{ 'h-40': imageAttachments.length > 1 }" class="shrink object-contain"/>
+  <div class="flex flex-wrap max-w-2xl overflow-clip gap-1" v-if="imageAttachments.length > 0">
+    <NuxtImg @click="showModal(image)" v-for="image in imageAttachments" :src="image as string + (imageAttachments.length > 1 ? '?max=140h' : '?max=460h')" alt="" :class="{ 'h-40': imageAttachments.length > 1 }" class="shrink object-contain"/>
   </div>
   <UModal
       class="bg-transparent"
