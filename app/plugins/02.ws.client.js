@@ -35,6 +35,10 @@ export default defineNuxtPlugin(() => {
             ws.onerror = () => {
                 reject()
             }
+
+            ws.onclose = () => {
+                window.location.reload()
+            }
         })
     }
 
