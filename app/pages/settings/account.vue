@@ -12,7 +12,7 @@ definePageMeta({
   <div class="flex-col flex gap-4">
     <h1 class="text-2xl font-bold">Account Settings</h1>
     <div>
-      <section>
+      <section hidden>
         <h2 class="text-xl">Log In Information</h2>
         <UModal title="Change Password" class="my-2">
           <UButton label="Change Password" />
