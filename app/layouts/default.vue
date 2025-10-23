@@ -16,7 +16,7 @@
     </div>
     <template #right>
       <UButton
-          to="https://faser.app/thiomains"
+          to="https://faser.app/@chanit"
           :avatar="{
             src: 'https://cdn.faser.app/faser/static/logo.png?size=24'
           }"
