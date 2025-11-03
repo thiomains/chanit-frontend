@@ -4,8 +4,7 @@ useSeoMeta({
   ogTitle: 'Chanit',
   description: 'Conversations built for the future.',
   ogDescription: 'Conversations built for the future.',
-  ogImage: 'https://cdn.faser.app/chanit/chanit-static/logo.png',
-  twitterCard: 'summary_large_image',
+  ogImage: 'https://cdn.faser.app/chanit/chanit-static-files/logo.png',
 })
 
 onMounted(() => {
