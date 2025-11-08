@@ -90,6 +90,10 @@ let typingUser = ref({})
 let attachmentCollapsible = ref(false)
 
 function toggleAttachmentCollapsible() {
+  if (attachments.value.length !== 0) {
+    attachmentCollapsible.value = true
+    return
+  }
   attachmentCollapsible.value = !attachmentCollapsible.value
 }
 
@@ -124,6 +128,8 @@ function handlePaste(event) {
     for (let i = 0; i < event.clipboardData.files.length; i++) {
       dt.items.add(event.clipboardData.files[i]);
     }
+
+    toggleAttachmentCollapsible()
 
 // Array statt FileList
     attachments.value = Array.from(dt.files);
