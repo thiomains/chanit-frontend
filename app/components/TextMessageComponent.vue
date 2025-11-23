@@ -35,6 +35,7 @@ if (avatarUrl.value === "") avatarUrl.value = "https://images.dog.ceo/breeds/hou
         </div>
         <div v-html="md.render(message.body)" class="break-words break-all w-full markdown-body" /><p v-if="message.lastEdited" class="text-dimmed text-sm">(edited)</p>
         <MessageAttachmentsComponent :attachments="message.attachments" />
+        <MessageEmbeds :embeds="message.embeds"/>
       </div>
     </div>
   </MessageContextMenuComponent>
