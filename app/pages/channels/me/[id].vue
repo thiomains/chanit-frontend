@@ -6,7 +6,7 @@ definePageMeta({
 const config = useRuntimeConfig()
 const route = useRoute()
 const session = useState('session')
-const { $connectWebsocket } = useNuxtApp()
+const { $connectWebsocket, $addWsListener, $removeWsListener } = useNuxtApp()
 import { DateTime } from "luxon"
 
 onMounted(async () => {
@@ -73,18 +73,17 @@ let channelName = ref('')
 
 let messages = ref([])
 
+let wsListeners = []
+
 onMounted(async () => {
   const ws = await $connectWebsocket()
   ws.send(JSON.stringify({
     type: "view-channel",
     channelId: route.params.id
   }))
-  ws.addEventListener("message", () => {
-    const message = JSON.parse(event.data)
-    if (message.type === "message") messageSentReceived(message)
-    if (message.type === "message-delete") messageDeletedReceived(message)
-    if (message.type === "message-edit") messageEditedReceived(message)
-  })
+  wsListeners.push($addWsListener("message", messageSentReceived))
+  wsListeners.push($addWsListener("message-delete", messageSentReceived))
+  wsListeners.push($addWsListener("message-edit", messageSentReceived))
 })
 
 function messageSentReceived(message) {

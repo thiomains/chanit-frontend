@@ -22,6 +22,9 @@ export default defineNuxtPlugin(() => {
             ws.onmessage = (event) => {
                 const message = JSON.parse(event.data)
                 if (!message) return
+
+                callEvent(message)
+
                 if (message.type === "authentication-failure") {
                     reject()
                 } else if (message.type === "authentication-success") {
@@ -41,14 +44,37 @@ export default defineNuxtPlugin(() => {
             }
 
             ws.onclose = () => {
-                window.location.reload()
+                connectWebsocket()
             }
         })
     }
 
+    let listenerCounter = 0
+    let listeners = new Map()
+
+    function addWsListener(messageType, callback) {
+        listeners.set(listenerCounter, {
+            messageType: messageType,
+            callback: callback
+        })
+        listenerCounter++
+    }
+
+    function removeWsListener(id) {
+        listeners.delete(id)
+    }
+
+    async function callEvent(message) {
+        for (const listener of listeners.values()) {
+            if (listener.messageType !== message.type) continue
+            console.log(listener)
+            listener.callback(message)
+        }
+    }
+
     return {
         provide: {
-            connectWebsocket
+            connectWebsocket, addWsListener, removeWsListener
         }
     }
 })
