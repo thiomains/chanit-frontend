@@ -22,7 +22,7 @@ const route = useRoute()
 </script>
 
 <template>
-  <div class="border border-default p-3 rounded-md flex items-center gap-2">
+  <div class="border border-default p-3 rounded-md flex items-center gap-2 layer-1">
     <UAvatar :src="avatarUrl()" size="xl" />
     <p class="font-bold">{{ username }}</p>
     <UButton :to="'/settings/account?back=' + route.path" class="ml-auto" icon="material-symbols:settings" variant="ghost" color="neutral" />

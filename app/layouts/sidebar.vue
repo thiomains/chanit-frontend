@@ -4,7 +4,7 @@ import SidebarChannelSelectComponent from "~/components/SidebarChannelSelectComp
 </script>
 
 <template>
-  <div>
+  <div class="layer-0">
     <div class="w-screen h-screen flex gap-2 p-2">
       <!-- <div class="w-xs h-full shrink-0">
 

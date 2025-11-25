@@ -3,9 +3,9 @@
 </script>
 
 <template>
-  <UCard class="w-full grow">
+  <UCard class="w-full grow layer-1">
     <div class="flex flex-col gap-2 mb-4">
-      <UButton size="xl" to="/channels/me" label="Friends" active-variant="subtle" color="neutral" variant="ghost" icon="material-symbols:group"/>
+      <LinkButton to="/channels/me" label="Friends" icon="material-symbols:group" layer="2"/>
     </div>
     <USeparator/>
     <div class="flex flex-col gap-2 mb-4">

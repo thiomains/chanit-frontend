@@ -9,10 +9,14 @@
     --color-warning: oklch(0.80 0.15 75);
     --color-error: oklch(0.60 0.18 25);
     --color-faser: oklch(0.65 0.18 173.262);
+    --color-layer-0: oklch(0.2 0.05 279);
+    --color-layer-1: oklch(0.25 0.05 279);
+    --color-layer-2: oklch(0.3 0.05 279);
+    --color-layer-3: oklch(0.35 0.05 279);
 }
 
 :root {
-    --ui-radius: 0.35rem;
+    --ui-radius: 0.8rem;
 
     --ui-text-dimmed: oklch(0.85 0.04 279);
     --ui-text-muted: oklch(0.9 0.04 279);
@@ -21,16 +25,21 @@
     --ui-text-highlighted: oklch(1 0.05 279);
     --ui-text-inverted: oklch(0.99 0.05 279);
 
-    --ui-bg: oklch(0.2 0.05 279);
-    --ui-bg-muted: oklch(0.25 0.05 279);
-    --ui-bg-elevated: oklch(0.3 0.05 279);
-    --ui-bg-accented: oklch(0.35 0.05 279);
+    --ui-bg: var(--ui-layer-0);
+    --ui-bg-muted: var(--ui-layer-1);
+    --ui-bg-elevated: var(--ui-layer-2);
+    --ui-bg-accented: var(--ui-layer-3);
     --ui-bg-inverted: oklch(0.9 0.05 279);
 
     --ui-border: oklch(0.3 0.05 279);
     --ui-border-muted: oklch(0.35 0.07 279);
     --ui-border-accented: oklch(0.45 0.09 279);
     --ui-border-inverted: oklch(0.95 0.05 279);
+
+    --ui-layer-0: oklch(0.2 0.05 279);
+    --ui-layer-1: oklch(0.25 0.05 279);
+    --ui-layer-2: oklch(0.3 0.05 279);
+    --ui-layer-3: oklch(0.35 0.05 279);
 }
 
 html {
@@ -46,4 +55,97 @@ html {
 ::-webkit-scrollbar-thumb {
     background: var(--ui-bg-muted);
     border-radius: var(--ui-radius);
+}
+
+.shadow-s {
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.4), inset 0px 2px 1px 0px rgba(255,255,255,0.1);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.4), inset 0px 2px 1px 0px rgba(255,255,255,0.1);
+}
+
+.shadow-m {
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.5), inset 0px 2px 1px 0px rgba(255,255,255,0.2);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.5), inset 0px 2px 1px 0px rgba(255,255,255,0.2);
+}
+
+.shadow-l {
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.6), inset 0px 2px 1px 0px rgba(255,255,255,0.3);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.6), inset 0px 2px 1px 0px rgba(255,255,255,0.3);
+}
+
+.shadow-s-inverted {
+    -webkit-box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.4), 0px 2px 1px 0px rgba(255,255,255,0.1);
+    box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.4), 0px 2px 1px 0px rgba(255,255,255,0.1);
+}
+
+.shadow-m-inverted {
+    -webkit-box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.5), 0px 2px 1px 0px rgba(255,255,255,0.2);
+    box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.5), 0px 2px 1px 0px rgba(255,255,255,0.2);
+}
+
+.shadow-l-inverted {
+    -webkit-box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.6), 0px 2px 1px 0px rgba(255,255,255,0.3);
+    box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.6), 0px 2px 1px 0px rgba(255,255,255,0.3);
+}
+
+.grad-layer-0 {
+    background: linear-gradient(-10deg, var(--color-layer-0), oklch(0.21 0.05 279));
+}
+
+.grad-layer-1 {
+    background: linear-gradient(-10deg, var(--color-layer-1), oklch(0.26 0.05 279));
+}
+
+.grad-layer-2 {
+    background: linear-gradient(-10deg, var(--color-layer-2), oklch(0.31 0.05 279));
+}
+
+.grad-layer-3 {
+    background: linear-gradient(-10deg, var(--color-layer-3), oklch(0.36 0.05 279));
+}
+
+.layer-0 {
+    background: var(--color-layer-0);
+    background: linear-gradient(-10deg, var(--color-layer-0), oklch(0.21 0.05 279));
+}
+
+.layer-1 {
+    background: var(--color-layer-1);
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.4), inset 0px 2px 1px 0px rgba(255,255,255,0.1);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.4), inset 0px 2px 1px 0px rgba(255,255,255,0.1);
+    background: linear-gradient(-10deg, var(--color-layer-1), oklch(0.26 0.05 279));
+}
+
+.layer-2 {
+    background: var(--color-layer-2);
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.5), inset 0px 2px 1px 0px rgba(255,255,255,0.2);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.5), inset 0px 2px 1px 0px rgba(255,255,255,0.2);
+    background: linear-gradient(-10deg, var(--color-layer-2), oklch(0.31 0.05 279));
+}
+
+.layer-3 {
+    background: var(--color-layer-3);
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.6), inset 0px 2px 1px 0px rgba(255,255,255,0.3);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.6), inset 0px 2px 1px 0px rgba(255,255,255,0.3);
+    background: linear-gradient(-10deg, var(--color-layer-3), oklch(0.36 0.05 279));
+}
+
+.hover-layer-1:hover {
+    background: var(--color-layer-1);
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.4), inset 0px 2px 1px 0px rgba(255,255,255,0.1);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.4), inset 0px 2px 1px 0px rgba(255,255,255,0.1);
+    background: linear-gradient(-10deg, var(--color-layer-1), oklch(0.26 0.05 279));
+}
+
+.hover-layer-2:hover {
+    background: var(--color-layer-2);
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.5), inset 0px 2px 1px 0px rgba(255,255,255,0.2);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.5), inset 0px 2px 1px 0px rgba(255,255,255,0.2);
+    background: linear-gradient(-10deg, var(--color-layer-2), oklch(0.31 0.05 279));
+}
+
+.hover-layer-3:hover {
+    background: var(--color-layer-3);
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.6), inset 0px 2px 1px 0px rgba(255,255,255,0.3);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.6), inset 0px 2px 1px 0px rgba(255,255,255,0.3);
+    background: linear-gradient(-10deg, var(--color-layer-3), oklch(0.36 0.05 279));
 }
