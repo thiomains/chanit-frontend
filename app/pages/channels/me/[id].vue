@@ -110,6 +110,11 @@ onUnmounted(() => {
 })
 
 function onGlobalKeydown(event) {
+  // Ctrl+V: focus input so paste goes there
+  if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+    inputComponentRef.value?.focusTextarea()
+    return
+  }
   // Only respond to printable single characters
   if (event.ctrlKey || event.altKey || event.metaKey) return
   if (event.key.length !== 1) return
