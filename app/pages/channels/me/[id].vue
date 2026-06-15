@@ -82,6 +82,7 @@ let messages = ref([])
 const activeThreadRootId = ref(null)
 const threadMessages = ref([])
 const replyToMessage = ref(null)
+const inputComponentRef = ref()
 const inThreadView = computed(() => activeThreadRootId.value !== null)
 const displayedMessages = computed(() =>
   inThreadView.value ? threadMessages.value : messages.value
@@ -121,7 +122,6 @@ function messageSentReceived(message) {
         }
       threadMessages.value.push(receivedMessage)
         replyToMessage.value = receivedMessage
-        replyToMessage.value = receivedMessage
       }
       return
     }
@@ -147,6 +147,9 @@ function messageSentReceived(message) {
 }
 
 function onMessageSent(res) {
+  // Prevent duplicate: message may already have arrived via WebSocket before POST response
+  if (messages.value.some(m => m.messageId === res.messageId)) return
+
   // POST response has author as a plain user ID; construct proper author from session
   res.author = {
     id: session.value.user.userId,
@@ -159,7 +162,9 @@ function onMessageSent(res) {
   }
   messages.value.push(res)
   if (inThreadView.value) {
-    threadMessages.value.push(res)
+    if (!threadMessages.value.some(m => m.messageId === res.messageId)) {
+      threadMessages.value.push(res)
+    }
     replyToMessage.value = res
   } else {
     replyToMessage.value = null
@@ -288,6 +293,10 @@ function onReplyClick(message) {
   replyToMessage.value = message
 }
 
+function onMentionUser(username) {
+  inputComponentRef.value?.insertAtCursor(`@${username} `)
+}
+
 function cancelReply() {
   replyToMessage.value = null
 }
@@ -324,10 +333,12 @@ function cancelReply() {
             :in-thread-view="inThreadView"
             @thread-click="enterThreadView"
             @reply-click="onReplyClick"
+            @mention-user="onMentionUser"
           />
         </div>
       </div>
       <TextChannelInputComponent
+        ref="inputComponentRef"
         :reply-to="replyToMessage"
         :in-thread-view="inThreadView"
         @message-sent="onMessageSent"

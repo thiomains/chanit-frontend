@@ -2,41 +2,139 @@
 const sessionState = useState("session")
 const config = useRuntimeConfig()
 const props = defineProps(["message"])
-const emit = defineEmits(["reply"])
+const emit = defineEmits(["reply", "mention-user"])
 const message = props.message as {
   messageId: string,
-  body: string
+  body: string,
+  author?: {
+    userId?: string,
+    username?: string
+  }
 }
 
 import MessageAttachmentsComponent from "~/components/MessageAttachmentsComponent.vue";
 
-const contextMenuItems = ref([
+const toast = useToast()
+
+const isOwn = computed(() => {
+  const session = sessionState.value as { user?: { userId?: string }, session?: { sessionId?: string, accessToken?: string } }
+  return session?.user?.userId != null && message?.author?.userId != null && session.user.userId === message.author.userId
+})
+
+async function copyToClipboard(text: string, label: string) {
+  try {
+    await navigator.clipboard.writeText(text)
+    toast.add({ title: label, color: "success" })
+  } catch (e) {
+    console.error("Failed to copy:", e)
+  }
+}
+
+function onCopyText() {
+  copyToClipboard(message.body || "", "Text copied")
+}
+
+function onCopyMessageId() {
+  copyToClipboard(message.messageId, "Message ID copied")
+}
+
+function onMentionUser() {
+  emit("mention-user", message.author?.username)
+}
+
+function onReportMessage() {
+  toast.add({ title: "Message reported", description: "Thank you for your report.", color: "success" })
+}
+
+const contextMenuItems = computed(() => [
   [
-    {
-      label: "Reply",
-      icon: "material-symbols:reply",
-      color: "neutral",
-      onSelect() {
-        emit("reply", message)
-      }
-    },
-    {
-      label: "Edit",
-      icon: "material-symbols:edit",
-      color: "neutral",
-      onSelect() {
-        openEditModal()
-      }
-    },
-    {
-      label: "Delete",
-      icon: "material-symbols:delete",
-      color: "error",
-      onSelect() {
-        deleteMessage()
-      }
-    },
-  ],
+    ...(isOwn.value
+      ? [
+          {
+            label: "Reply",
+            icon: "material-symbols:reply",
+            color: "neutral",
+            onSelect() {
+              emit("reply", message)
+            }
+          },
+          {
+            label: "Edit",
+            icon: "material-symbols:edit",
+            color: "neutral",
+            onSelect() {
+              openEditModal()
+            }
+          },
+          {
+            label: "Delete",
+            icon: "material-symbols:delete",
+            color: "error",
+            onSelect() {
+              deleteMessage()
+            }
+          },
+          {
+            label: "Copy Text",
+            icon: "material-symbols:content-copy",
+            color: "neutral",
+            onSelect() {
+              onCopyText()
+            }
+          },
+          {
+            label: "Copy Message ID",
+            icon: "material-symbols:tag",
+            color: "neutral",
+            onSelect() {
+              onCopyMessageId()
+            }
+          }
+        ]
+      : [
+          {
+            label: "Reply",
+            icon: "material-symbols:reply",
+            color: "neutral",
+            onSelect() {
+              emit("reply", message)
+            }
+          },
+          {
+            label: "Copy Text",
+            icon: "material-symbols:content-copy",
+            color: "neutral",
+            onSelect() {
+              onCopyText()
+            }
+          },
+          {
+            label: "Copy Message ID",
+            icon: "material-symbols:tag",
+            color: "neutral",
+            onSelect() {
+              onCopyMessageId()
+            }
+          },
+          {
+            label: "Mention",
+            icon: "material-symbols:alternate-email",
+            color: "neutral",
+            onSelect() {
+              onMentionUser()
+            }
+          },
+          {
+            label: "Report",
+            icon: "material-symbols:flag",
+            color: "error",
+            onSelect() {
+              onReportMessage()
+            }
+          }
+        ]
+    )
+  ]
 ])
 
 async function deleteMessage() {

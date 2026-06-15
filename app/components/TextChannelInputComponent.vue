@@ -18,6 +18,22 @@ const props = defineProps({
 })
 
 let messageInput = ref("")
+const textareaRef = ref()
+
+function insertAtCursor(text) {
+  const el = textareaRef.value?.$el?.querySelector?.('textarea') ?? textareaRef.value?.$el
+  if (el instanceof HTMLTextAreaElement) {
+    const start = el.selectionStart
+    const end = el.selectionEnd
+    messageInput.value = messageInput.value.substring(0, start) + text + messageInput.value.substring(end)
+    nextTick(() => {
+      el.selectionStart = el.selectionEnd = start + text.length
+      el.focus()
+    })
+  } else {
+    messageInput.value += text
+  }
+}
 
 async function enterPressed(event) {
 
@@ -150,6 +166,7 @@ function handlePaste(event) {
   }
 }
 
+defineExpose({ insertAtCursor })
 </script>
 
 <template>
@@ -176,6 +193,7 @@ function handlePaste(event) {
       </template>
     </UCollapsible>
     <UTextarea
+        ref="textareaRef"
         @paste="handlePaste"
         @input="sendTyping"
         @keydown.enter="enterPressed"

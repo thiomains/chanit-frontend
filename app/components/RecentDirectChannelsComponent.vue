@@ -151,7 +151,7 @@ function avatarUrl(channel: RecentChannel) {
         color="neutral"
         block
     >
-      <UChip inset position="bottom-right" size="xl" :show="showChip(channel)">
+      <UChip inset position="bottom-right" size="xl" color="success" :show="showChip(channel)">
         <UAvatar :src="avatarUrl(channel)" size="lg"/>
       </UChip>
       <div class="overflow-hidden">

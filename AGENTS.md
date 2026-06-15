@@ -144,3 +144,4 @@ const schema = v.object({
 - **No explicit TypeScript compilation step.** TypeScript is handled by Nuxt's built-in transform. The `tsconfig.json` extends the auto-generated `.nuxt/tsconfig.json`.
 - **Components auto-import:** Vue components in `app/components/` are globally available without import. However, some files still have explicit `import` statements — both patterns coexist.
 - **Heavy `window.location.reload()` usage**: Many navigation flows end with `window.location.reload()`. This is a known pattern — investigate whether state reactivity can replace it before adding new reloads.
+- **Kein Build zum Testen**: Führe keine Builds (`npm run build`, `npx nuxi typecheck`, etc.) zum Testen aus, es sei denn, es ist ausdrücklich erwünscht. Type-Checks sind ohne laufendes Backend + `.env` nicht aussagekräftig und verursachen nur unnötige Wartezeit.
