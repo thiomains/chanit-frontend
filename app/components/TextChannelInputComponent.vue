@@ -4,7 +4,18 @@ const route = useRoute()
 const session = useState("session")
 const { $connectWebsocket } = useNuxtApp()
 
-const emit = defineEmits(['message-sent'])
+const emit = defineEmits(['message-sent', 'cancel-reply'])
+
+const props = defineProps({
+  replyTo: {
+    type: Object,
+    default: null
+  },
+  inThreadView: {
+    type: Boolean,
+    default: false
+  }
+})
 
 let messageInput = ref("")
 
@@ -31,7 +42,8 @@ async function enterPressed(event) {
       },
       body: {
         body: messageBody,
-        attachmentCount: attachments.value.length
+        attachmentCount: attachments.value.length,
+        replyTo: props.replyTo?.messageId || undefined
       }
     })
 
@@ -143,6 +155,11 @@ function handlePaste(event) {
 <template>
   <div class="h-4 px-6 mt-2">
     <p v-if="showTyping" ><b class="font-bold">{{ typingUser }}</b> is typing...</p>
+  </div>
+  <div v-if="props.replyTo && !props.inThreadView" class="flex items-center gap-2 px-6 pt-2">
+    <UIcon name="material-symbols:reply" class="size-4 text-dimmed" />
+    <span class="text-sm text-dimmed">Replying to <strong>@{{ props.replyTo.author.username }}</strong></span>
+    <UButton icon="material-symbols:close" variant="ghost" color="neutral" size="xs" class="ml-auto" @click="$emit('cancel-reply')" />
   </div>
   <div class="p-4">
     <UCollapsible :open="attachmentCollapsible" :unmount-on-hide="false">

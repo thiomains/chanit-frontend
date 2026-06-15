@@ -2,6 +2,7 @@
 const sessionState = useState("session")
 const config = useRuntimeConfig()
 const props = defineProps(["message"])
+const emit = defineEmits(["reply"])
 const message = props.message as {
   messageId: string,
   body: string
@@ -11,6 +12,14 @@ import MessageAttachmentsComponent from "~/components/MessageAttachmentsComponen
 
 const contextMenuItems = ref([
   [
+    {
+      label: "Reply",
+      icon: "material-symbols:reply",
+      color: "neutral",
+      onSelect() {
+        emit("reply", message)
+      }
+    },
     {
       label: "Edit",
       icon: "material-symbols:edit",

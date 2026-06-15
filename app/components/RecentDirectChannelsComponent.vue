@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const sessionState = useState('session')
 const config = useRuntimeConfig()
-const { $getOnlineStatus } = useNuxtApp()
+const { $getOnlineStatus, $connectWebsocket } = useNuxtApp()
 
 interface RecentChannel {
   channelId: string,
@@ -43,7 +43,39 @@ async function loadRecentChannels() {
 
 onMounted(async () => {
   await loadRecentChannels()
+
+  const ws = await $connectWebsocket()
+  ws.addEventListener("message", (event) => {
+    const msg = JSON.parse(event.data)
+    if (msg.type === "message") handleIncomingMessage(msg)
+  })
 })
+
+function handleIncomingMessage(msg: any) {
+  const receivedMessage = msg.message
+  if (!receivedMessage?.channelId) return
+
+  const index = data.value.findIndex(c => c.channelId === receivedMessage.channelId)
+  if (index !== -1) {
+    // Update existing channel: move to top with new lastMessage
+    const channel = { ...data.value[index] }
+    channel.lastMessage = {
+      channelId: receivedMessage.channelId,
+      createdAt: receivedMessage.createdAt,
+      messageId: receivedMessage.messageId,
+      body: receivedMessage.body,
+      author: {
+        username: receivedMessage.author?.username || ''
+      }
+    }
+    data.value.splice(index, 1)
+    data.value.unshift(channel)
+  } else if (!refreshing.value) {
+    // New DM appeared — re-fetch full list once
+    refreshing.value = true
+    loadRecentChannels().finally(() => { refreshing.value = false })
+  }
+}
 
 function title(channel: RecentChannel) {
   let name = channel.directMessageChannel.name
@@ -94,6 +126,7 @@ function showChip(channel: RecentChannel) {
 
 let data = ref<RecentChannel[]>([])
 let loaded = ref(false)
+let refreshing = ref(false)
 
 function avatarUrl(channel: RecentChannel) {
   const member = getOtherMember(channel) as {

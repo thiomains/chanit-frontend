@@ -63,6 +63,12 @@ async function fetchMessages() {
       }
     })
     messages.value = res.reverse()
+    for (const msg of messages.value) {
+      if (msg.replyTo) {
+        const parent = messages.value.find(m => m.messageId === msg.replyTo)
+        if (parent) msg.replyToUsername = parent.author.username
+      }
+    }
     scrollToBottom(true)
   } catch (e) {
     console.log(e)
@@ -72,6 +78,14 @@ async function fetchMessages() {
 let channelName = ref('')
 
 let messages = ref([])
+
+const activeThreadRootId = ref(null)
+const threadMessages = ref([])
+const replyToMessage = ref(null)
+const inThreadView = computed(() => activeThreadRootId.value !== null)
+const displayedMessages = computed(() =>
+  inThreadView.value ? threadMessages.value : messages.value
+)
 
 onMounted(async () => {
   const ws = await $connectWebsocket()
@@ -91,19 +105,45 @@ function messageSentReceived(message) {
   const receivedMessage = message.message
   if (receivedMessage.channelId !== route.params.id) return
 
+  receivedMessage.author.id = receivedMessage.author.userId
+
   // Check if message already exists (added instantly via @message-sent)
   for (let i = 0; i < messages.value.length; i++) {
     if (messages.value[i].messageId === receivedMessage.messageId) {
-      // Replace with full data from WebSocket broadcast
-      receivedMessage.author.id = receivedMessage.author.userId
       messages.value[i] = receivedMessage
+      // Also update in threadMessages if in thread view
+      if (inThreadView.value) {
+        for (let j = 0; j < threadMessages.value.length; j++) {
+          if (threadMessages.value[j].messageId === receivedMessage.messageId) {
+            threadMessages.value[j] = receivedMessage
+            return
+          }
+        }
+      threadMessages.value.push(receivedMessage)
+        replyToMessage.value = receivedMessage
+        replyToMessage.value = receivedMessage
+      }
       return
     }
   }
 
-  receivedMessage.author.id = receivedMessage.author.userId
   messages.value.push(receivedMessage)
-  scrollToBottom()
+
+  // Resolve replyToUsername for new message
+  if (receivedMessage.replyTo) {
+    const parent = messages.value.find(m => m.messageId === receivedMessage.replyTo)
+    if (parent) receivedMessage.replyToUsername = parent.author.username
+  }
+
+  // If in thread view and message is a reply in the current thread chain, add it
+  if (inThreadView.value) {
+    const lastThreadMsg = threadMessages.value[threadMessages.value.length - 1]
+    if (receivedMessage.replyTo === lastThreadMsg?.messageId) {
+      threadMessages.value.push(receivedMessage)
+    }
+  }
+
+  if (!inThreadView.value) scrollToBottom()
 }
 
 function onMessageSent(res) {
@@ -114,7 +154,16 @@ function onMessageSent(res) {
     username: session.value.user.username,
     profilePictureUrl: session.value.user.profilePictureUrl
   }
+  if (replyToMessage.value) {
+    res.replyToUsername = replyToMessage.value.author.username
+  }
   messages.value.push(res)
+  if (inThreadView.value) {
+    threadMessages.value.push(res)
+    replyToMessage.value = res
+  } else {
+    replyToMessage.value = null
+  }
   scrollToBottom(true)
 }
 
@@ -123,6 +172,11 @@ function messageDeletedReceived(message) {
     const msg = messages.value[i]
     if (msg.messageId !== message.messageId) continue
     messages.value.splice(i, 1)
+  }
+  for (let i = 0; i < threadMessages.value.length; i++) {
+    const msg = threadMessages.value[i]
+    if (msg.messageId !== message.messageId) continue
+    threadMessages.value.splice(i, 1)
   }
 }
 
@@ -133,10 +187,18 @@ function messageEditedReceived(message) {
     messages.value[i].body = message.body
     messages.value[i].lastEdited = message.lastEdited
   }
+  for (let i = 0; i < threadMessages.value.length; i++) {
+    const msg = threadMessages.value[i]
+    if (msg.messageId !== message.messageId) continue
+    threadMessages.value[i].body = message.body
+    threadMessages.value[i].lastEdited = message.lastEdited
+  }
 }
 
 function isGrouped(message, previousMessage) {
   if (!previousMessage) return false
+  if (message.replyTo) return false
+  if (previousMessage.replyTo) return false
   if (message.author.userId !== previousMessage.author.userId) return false
   if (!isSameDay(message, previousMessage)) return false
   if (Math.abs(message.createdAt - previousMessage.createdAt) > 15 * 60 * 1000) return false
@@ -175,6 +237,7 @@ function scrollToBottom(force) {
 
 let fetchingMessages = ref(true)
 async function handleScroll(event) {
+  if (inThreadView.value) return
   if (messages.value.length === 0) return
   if (event.srcElement.scrollTop < 100) {
     if (fetchingMessages.value) return
@@ -197,6 +260,38 @@ async function handleScroll(event) {
   } else fetchingMessages.value = false
 }
 
+async function enterThreadView(messageId) {
+  try {
+    const res = await $fetch(config.public.apiBaseUrl + "/message/" + messageId + "/replies", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${session.value.session.accessToken}`,
+        Session: session.value.session.sessionId
+      }
+    })
+    threadMessages.value = res
+    activeThreadRootId.value = messageId
+    replyToMessage.value = res[res.length - 1]
+    nextTick(() => scrollToBottom(true))
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+function exitThreadView() {
+  activeThreadRootId.value = null
+  threadMessages.value = []
+  replyToMessage.value = null
+}
+
+function onReplyClick(message) {
+  replyToMessage.value = message
+}
+
+function cancelReply() {
+  replyToMessage.value = null
+}
+
 </script>
 
 <template>
@@ -206,22 +301,38 @@ async function handleScroll(event) {
         <div class="flex items-center gap-2">
           <UAvatar src="https://images.dog.ceo/breeds/puggle/IMG_075018.jpg" />
           <p class="font-bold">{{ channelName }}</p>
+          <div v-if="inThreadView" class="flex items-center gap-2 ml-auto">
+            <UIcon name="material-symbols:forum" class="size-5 text-dimmed" />
+            <span class="text-dimmed text-sm">Thread</span>
+            <UButton icon="material-symbols:close" variant="ghost" color="neutral" size="xs" @click="exitThreadView" />
+          </div>
         </div>
       </UCard>
       <div class="flex-1 overflow-y-scroll flex flex-col" ref="messagesContainer" @scroll="handleScroll">
-        <div :key="message.messageId" v-for="( message, i ) in messages">
+        <div :key="message.messageId" v-for="( message, i ) in displayedMessages">
           <USeparator
               class="mt-4"
-              v-if="!isSameDay(message, messages[i-1])"
+              v-if="!isSameDay(message, displayedMessages[i-1])"
               :label="DateTime.fromJSDate(
                   new Date(message.createdAt)
                   ).toRelativeCalendar({
                   locale: 'en-US'
               })"/>
-          <TextMessageComponent :grouped="isGrouped(message, messages[i-1])" :message="message"/>
+          <TextMessageComponent
+            :grouped="isGrouped(message, displayedMessages[i-1])"
+            :message="message"
+            :in-thread-view="inThreadView"
+            @thread-click="enterThreadView"
+            @reply-click="onReplyClick"
+          />
         </div>
       </div>
-      <TextChannelInputComponent @message-sent="onMessageSent" />
+      <TextChannelInputComponent
+        :reply-to="replyToMessage"
+        :in-thread-view="inThreadView"
+        @message-sent="onMessageSent"
+        @cancel-reply="cancelReply"
+      />
     </div>
     <!-- <div>
       <USkeleton class="w-xs h-full" />
