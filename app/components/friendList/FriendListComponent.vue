@@ -3,6 +3,7 @@
 import AddFriendComponent from "~/components/friendList/AddFriendComponent.vue";
 import type { TabsItem } from '@nuxt/ui'
 import AllFriendsListComponent from "~/components/friendList/AllFriendsListComponent.vue";
+import OnlineFriendsListComponent from "~/components/friendList/OnlineFriendsListComponent.vue";
 import FriendRequestsComponent from "~/components/friendList/FriendRequestsComponent.vue";
 
 const sessionState = useState('session') as any
@@ -39,7 +40,7 @@ const items = ref<TabsItem[]>([
 
     <UTabs :items="items" class="w-full mt-2 flex-1 overflow-auto" :ui="{ content: 'focus:outline-none w-full overflow-auto' }">
       <template #onlineFriends="{ item }">
-
+        <OnlineFriendsListComponent />
       </template>
       <template #allFriends="{ item }">
         <AllFriendsListComponent />

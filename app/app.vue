@@ -1,6 +1,6 @@
 <script setup>
 const session = useState("session")
-const { $connect, $startRefreshTimer, $connectWebsocket } = useNuxtApp()
+const { $connect, $startRefreshTimer, $connectWebsocket, $initOnlineStatus } = useNuxtApp()
 const route = useRoute()
 
 let showLoading = ref(true)
@@ -31,6 +31,7 @@ onMounted( async () => {
   await navigateTo('/app')
   await $connect()
   let ws = await $connectWebsocket()
+  await $initOnlineStatus()
   $startRefreshTimer()
   while (!ws) ws = await $connectWebsocket()
   websocketConnection()

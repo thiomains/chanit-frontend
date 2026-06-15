@@ -1,14 +1,18 @@
-export default defineNuxtPlugin(async (nuxtApp) => {
+export default defineNuxtPlugin((nuxtApp) => {
     let userStatus = ref(new Map())
+    let listenerAdded = false
 
-    const ws = await nuxtApp.$connectWebsocket()
-    ws.addEventListener("message", () => {
-        const message = JSON.parse(event.data)
-        if (message.type !== "online-status") return
-        console.log(message)
-        setOnlineStatus(message.userId, message.status)
-    })
-
+    async function initOnlineStatus() {
+        if (listenerAdded) return
+        const ws = await nuxtApp.$connectWebsocket()
+        ws.addEventListener("message", (event) => {
+            const message = JSON.parse(event.data)
+            if (message.type !== "online-status") return
+            console.log(message)
+            setOnlineStatus(message.userId, message.status)
+        })
+        listenerAdded = true
+    }
 
     function setOnlineStatus(userId, onlineStatus) {
         userStatus.value.set(userId, onlineStatus)
@@ -23,7 +27,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     return {
         provide: {
             setOnlineStatus,
-            getOnlineStatus
+            getOnlineStatus,
+            initOnlineStatus
         }
     }
 })
