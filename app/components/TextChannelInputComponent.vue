@@ -20,8 +20,19 @@ const props = defineProps({
 let messageInput = ref("")
 const textareaRef = ref()
 
+function getTextareaEl() {
+  return textareaRef.value?.$el?.querySelector?.('textarea') ?? textareaRef.value?.$el
+}
+
+function focusTextarea() {
+  const el = getTextareaEl()
+  if (el instanceof HTMLTextAreaElement) {
+    el.focus()
+  }
+}
+
 function insertAtCursor(text) {
-  const el = textareaRef.value?.$el?.querySelector?.('textarea') ?? textareaRef.value?.$el
+  const el = getTextareaEl()
   if (el instanceof HTMLTextAreaElement) {
     const start = el.selectionStart
     const end = el.selectionEnd
@@ -166,7 +177,7 @@ function handlePaste(event) {
   }
 }
 
-defineExpose({ insertAtCursor })
+defineExpose({ insertAtCursor, focusTextarea })
 </script>
 
 <template>

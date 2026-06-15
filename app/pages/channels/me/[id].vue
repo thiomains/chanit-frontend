@@ -100,7 +100,25 @@ onMounted(async () => {
     if (message.type === "message-delete") messageDeletedReceived(message)
     if (message.type === "message-edit") messageEditedReceived(message)
   })
+
+  // Focus input when user starts typing anywhere on the page
+  document.addEventListener("keydown", onGlobalKeydown)
 })
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", onGlobalKeydown)
+})
+
+function onGlobalKeydown(event) {
+  // Only respond to printable single characters
+  if (event.ctrlKey || event.altKey || event.metaKey) return
+  if (event.key.length !== 1) return
+  // Don't steal focus from other inputs/modals
+  const tag = document.activeElement?.tagName?.toLowerCase()
+  if (tag === 'input' || tag === 'textarea' || tag === 'select') return
+  if (document.activeElement?.isContentEditable) return
+  inputComponentRef.value?.focusTextarea()
+}
 
 function messageSentReceived(message) {
   const receivedMessage = message.message
@@ -291,6 +309,9 @@ function exitThreadView() {
 
 function onReplyClick(message) {
   replyToMessage.value = message
+  nextTick(() => {
+    inputComponentRef.value?.focusTextarea()
+  })
 }
 
 function onMentionUser(username) {
