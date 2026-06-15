@@ -44,7 +44,7 @@ async function login(email: string, password: string) {
 }
 
 async function faserLogin() {
-  window.location.href = "https://faser.app/oauth/?client_id=a730mf1oeiuof3rbbec1z&redirect_uri=" + window.location.origin + "/auth&scopes=69"
+  window.location.href = "https://faser.app/oauth/?client_id=lathwl3ei6huc3pzue1g6h&redirect_uri=" + window.location.origin + "/auth&scopes=69"
 }
 
 
