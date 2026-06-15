@@ -79,7 +79,7 @@ onMounted(async () => {
     type: "view-channel",
     channelId: route.params.id
   }))
-  ws.addEventListener("message", () => {
+  ws.addEventListener("message", (event) => {
     const message = JSON.parse(event.data)
     if (message.type === "message") messageSentReceived(message)
     if (message.type === "message-delete") messageDeletedReceived(message)
@@ -90,9 +90,32 @@ onMounted(async () => {
 function messageSentReceived(message) {
   const receivedMessage = message.message
   if (receivedMessage.channelId !== route.params.id) return
+
+  // Check if message already exists (added instantly via @message-sent)
+  for (let i = 0; i < messages.value.length; i++) {
+    if (messages.value[i].messageId === receivedMessage.messageId) {
+      // Replace with full data from WebSocket broadcast
+      receivedMessage.author.id = receivedMessage.author.userId
+      messages.value[i] = receivedMessage
+      return
+    }
+  }
+
   receivedMessage.author.id = receivedMessage.author.userId
   messages.value.push(receivedMessage)
   scrollToBottom()
+}
+
+function onMessageSent(res) {
+  // POST response has author as a plain user ID; construct proper author from session
+  res.author = {
+    id: session.value.user.userId,
+    userId: session.value.user.userId,
+    username: session.value.user.username,
+    profilePictureUrl: session.value.user.profilePictureUrl
+  }
+  messages.value.push(res)
+  scrollToBottom(true)
 }
 
 function messageDeletedReceived(message) {
@@ -198,7 +221,7 @@ async function handleScroll(event) {
           <TextMessageComponent :grouped="isGrouped(message, messages[i-1])" :message="message"/>
         </div>
       </div>
-      <TextChannelInputComponent />
+      <TextChannelInputComponent @message-sent="onMessageSent" />
     </div>
     <!-- <div>
       <USkeleton class="w-xs h-full" />
