@@ -20,8 +20,10 @@ onMounted(async () => {
       }
     })
 
+    let otherUserProfile = null
     for (let i = 0; i < res.directMessageChannel.members.length; i++) {
       const user = res.directMessageChannel.members[i]
+      if (user.userId === session.value.user.userId) continue
       const profile = await $fetch(config.public.apiBaseUrl + "/user/" + user.userId + "/profile", {
         method: "GET",
         headers: {
@@ -29,6 +31,7 @@ onMounted(async () => {
           Session: session.value.session.sessionId
         }
       })
+      otherUserProfile = profile
     }
 
     if (res.channelType === "direct-message") {
@@ -43,6 +46,9 @@ onMounted(async () => {
         }
       }
       channelName.value = name
+      if (otherUserProfile) {
+        channelAvatarUrl.value = otherUserProfile.profilePictureUrl || ''
+      }
     }
 
   } catch (e) {
@@ -76,6 +82,7 @@ async function fetchMessages() {
 }
 
 let channelName = ref('')
+let channelAvatarUrl = ref('')
 
 let messages = ref([])
 
@@ -105,8 +112,21 @@ onMounted(async () => {
   document.addEventListener("keydown", onGlobalKeydown)
 })
 
+onMounted(() => {
+  const el = myEl.value
+  if (!el) return
+  resizeObserver = new ResizeObserver(() => {
+    scrollToBottom(false)
+  })
+  resizeObserver.observe(el)
+})
+
 onUnmounted(() => {
   document.removeEventListener("keydown", onGlobalKeydown)
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+    resizeObserver = null
+  }
 })
 
 function onGlobalKeydown(event) {
@@ -257,6 +277,7 @@ function isSameDay(message, previousMessage) {
 import { useTemplateRef } from 'vue'
 
 const myEl = useTemplateRef('messagesContainer')
+let resizeObserver = null
 
 function scrollToBottom(force) {
   nextTick(() => {
@@ -344,7 +365,7 @@ function cancelReply() {
     <div class="w-full h-full flex flex-col">
       <UCard variant="subtle">
         <div class="flex items-center gap-2">
-          <UAvatar src="https://images.dog.ceo/breeds/puggle/IMG_075018.jpg" />
+          <UAvatar :src="channelAvatarUrl ? channelAvatarUrl + '?size=40' : undefined" />
           <p class="font-bold">{{ channelName }}</p>
         </div>
       </UCard>

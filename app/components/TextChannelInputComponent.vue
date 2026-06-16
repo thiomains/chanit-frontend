@@ -106,6 +106,7 @@ onMounted(async () => {
     if (message.type !== "typing") return
     if (message.channelId !== route.params.id) return
     if (message.userId === session.value.user.userId) return
+    typingUser.value = message.username
     lastTyping.value = Date.now()
     showTyping.value = true
     setTimeout(() => {
@@ -199,7 +200,7 @@ defineExpose({ insertAtCursor, focusTextarea })
         <UButton icon="material-symbols:close" variant="ghost" color="neutral" size="xs" class="ml-auto shrink-0" @click="$emit('cancel-reply')" />
       </div>
     </Transition>
-    <div class="px-3 pb-2 pt-0">
+    <div class="pb-1 pt-0">
       <UCollapsible :open="attachmentCollapsible" :unmount-on-hide="false">
         <template #content>
           <UFileUpload
