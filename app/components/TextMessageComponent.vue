@@ -18,10 +18,16 @@ let avatarUrl = ref(message.value.author.profilePictureUrl)
 if (avatarUrl.value === "") avatarUrl.value = "https://images.dog.ceo/breeds/hound-walker/n02089867_2596.jpg"
 
 const replyIndicatorText = computed(() => {
-  if (message.value.replyToUsername) {
-    return "replied to @" + message.value.replyToUsername
+  const msg = props.message
+  const base = msg.replyToUsername
+    ? "replied to @" + msg.replyToUsername
+    : "replied to a message"
+  if (msg.replyToBody) {
+    const body = msg.replyToBody.replace(/\n/g, ' ')
+    const preview = body.length > 30 ? body.substring(0, 30) + "…" : body
+    return base + ": " + preview
   }
-  return "replied to a message"
+  return base
 })
 </script>
 

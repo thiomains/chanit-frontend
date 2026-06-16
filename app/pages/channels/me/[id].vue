@@ -72,7 +72,10 @@ async function fetchMessages() {
     for (const msg of messages.value) {
       if (msg.replyTo) {
         const parent = messages.value.find(m => m.messageId === msg.replyTo)
-        if (parent) msg.replyToUsername = parent.author.username
+        if (parent) {
+          msg.replyToUsername = parent.author.username
+          msg.replyToBody = parent.body
+        }
       }
     }
     scrollToBottom(true)
@@ -164,6 +167,14 @@ function messageSentReceived(message) {
   for (let i = 0; i < messages.value.length; i++) {
     if (messages.value[i].messageId === receivedMessage.messageId) {
       messages.value[i] = receivedMessage
+      // Resolve reply info for WebSocket-updated message
+      if (receivedMessage.replyTo) {
+        const parent = messages.value.find(m => m.messageId === receivedMessage.replyTo)
+        if (parent) {
+          receivedMessage.replyToUsername = parent.author.username
+          receivedMessage.replyToBody = parent.body
+        }
+      }
       // Also update in threadMessages if in thread view
       if (inThreadView.value) {
         for (let j = 0; j < threadMessages.value.length; j++) {
@@ -184,7 +195,10 @@ function messageSentReceived(message) {
   // Resolve replyToUsername for new message
   if (receivedMessage.replyTo) {
     const parent = messages.value.find(m => m.messageId === receivedMessage.replyTo)
-    if (parent) receivedMessage.replyToUsername = parent.author.username
+    if (parent) {
+      receivedMessage.replyToUsername = parent.author.username
+      receivedMessage.replyToBody = parent.body
+    }
   }
 
   // If in thread view and message is a reply in the current thread chain, add it
@@ -211,6 +225,7 @@ function onMessageSent(res) {
   }
   if (replyToMessage.value) {
     res.replyToUsername = replyToMessage.value.author.username
+    res.replyToBody = replyToMessage.value.body
   }
   messages.value.push(res)
   if (inThreadView.value) {
