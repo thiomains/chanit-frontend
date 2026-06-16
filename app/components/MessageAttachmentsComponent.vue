@@ -10,20 +10,15 @@ interface Attachment {
   fileSize: number,
 }
 
-const attachments = props.attachments as Attachment[]
+const attachments = computed(() => (props.attachments as Attachment[]) || [])
 
-let imageAttachments = ref<String[]>([])
-let otherAttachments = ref<Attachment[]>([])
+const imageAttachments = computed(() =>
+  attachments.value.filter(a => a.url !== '' && a.mimetype?.startsWith('image')).map(a => a.url)
+)
 
-for (let i = 0; i < attachments.length; i++) {
-  let attachment = attachments[i] as Attachment
-  if (attachment.url === "") continue
-  if (attachment.mimetype.startsWith("image")) {
-    imageAttachments.value.push(attachment.url)
-    continue
-  }
-  otherAttachments.value.push(attachment)
-}
+const otherAttachments = computed(() =>
+  attachments.value.filter(a => a.url !== '' && !a.mimetype?.startsWith('image'))
+)
 
 let modalOpen = ref(false)
 

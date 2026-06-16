@@ -3,8 +3,8 @@ import MessageAttachmentsComponent from "~/components/MessageAttachmentsComponen
 
 const props = defineProps(["message", "grouped", "inThreadView", "highlighted"])
 const emit = defineEmits(["thread-click", "reply-click", "mention-user"])
-const message = ref(props.message)
-const grouped = ref(props.grouped)
+const message = computed(() => props.message)
+const grouped = computed(() => props.grouped)
 
 import MarkdownIt from "markdown-it"
 
