@@ -13,11 +13,15 @@ interface FriendRequest {
   sender: {
     userId: string,
     username: string,
+    profilePictureUrl: string,
+    bio: string,
     createdAt: number
   }
   recipient: {
     userId: string,
     username: string,
+    profilePictureUrl: string,
+    bio: string,
     createdAt: number
   },
   createdAt: number

@@ -45,7 +45,7 @@ onMounted(async () => {
   await loadRecentChannels()
 
   const ws = await $connectWebsocket()
-  ws.addEventListener("message", (event) => {
+  ws.addEventListener("message", (event: MessageEvent) => {
     const msg = JSON.parse(event.data)
     if (msg.type === "message") handleIncomingMessage(msg)
   })
@@ -58,7 +58,7 @@ function handleIncomingMessage(msg: any) {
   const index = data.value.findIndex(c => c.channelId === receivedMessage.channelId)
   if (index !== -1) {
     // Update existing channel: move to top with new lastMessage
-    const channel = { ...data.value[index] }
+    const channel: RecentChannel = { ...data.value[index] }
     channel.lastMessage = {
       channelId: receivedMessage.channelId,
       createdAt: receivedMessage.createdAt,

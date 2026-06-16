@@ -144,6 +144,7 @@ async function deleteMessage() {
       accessToken: string
     }
   }
+  loading.value = true
   try {
     const res = await $fetch(config.public.apiBaseUrl + "/message/" + message.messageId, {
       method: "DELETE",
@@ -155,8 +156,10 @@ async function deleteMessage() {
   } catch (e) {
     console.log(e)
   }
+  loading.value = false
 }
 
+let loading = ref(false)
 let editModalOpen = ref(false)
 let editedBody = ref(message.body)
 
@@ -176,6 +179,7 @@ async function editMessage() {
       accessToken: string
     }
   }
+  loading.value = true
   try {
     const res = await $fetch(config.public.apiBaseUrl + "/message/" + message.messageId, {
       method: "PATCH",
@@ -192,6 +196,7 @@ async function editMessage() {
   } catch (e) {
     console.log(e)
   }
+  loading.value = false
 }
 
 </script>

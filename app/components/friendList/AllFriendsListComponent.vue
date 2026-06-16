@@ -11,6 +11,8 @@ interface Friend {
   user: {
     username: string
     userId: string
+    profilePictureUrl: string
+    bio: string
   }
 }
 
