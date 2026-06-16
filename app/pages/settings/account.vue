@@ -25,20 +25,6 @@ const userEmail = computed(() => sessionState.value?.user?.email || 'No email')
       <h2 class="text-xl font-semibold">Login Information</h2>
       <USeparator />
 
-      <!-- Password -->
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm font-medium">Password</p>
-          <p class="text-dimmed text-sm">••••••••</p>
-        </div>
-        <UModal title="Change Password">
-          <UButton label="Change Password" variant="outline" />
-          <template #body>
-            <ChangePasswordComponent />
-          </template>
-        </UModal>
-      </div>
-
       <!-- Email -->
       <div class="flex items-center justify-between">
         <div>
@@ -50,6 +36,20 @@ const userEmail = computed(() => sessionState.value?.user?.email || 'No email')
         </ChangeEmailComponent>
       </div>
     </section>
+
+    <!-- Password -->
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm font-medium">Password</p>
+        <p class="text-dimmed text-sm">••••••••</p>
+      </div>
+      <UModal title="Change Password">
+        <UButton label="Change Password" variant="outline" />
+        <template #body>
+          <ChangePasswordComponent />
+        </template>
+      </UModal>
+    </div>
 
     <!-- Data Request -->
     <section class="flex flex-col gap-4">
