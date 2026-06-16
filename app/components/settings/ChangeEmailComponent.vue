@@ -4,6 +4,7 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 
 const config = useRuntimeConfig()
 const sessionState = useState<any>('session')
+const currentEmail = computed(() => sessionState?.value?.user?.email || 'your email')
 const toast = useToast()
 const { $refreshUser } = useNuxtApp()
 
@@ -65,17 +66,11 @@ async function onStep1Submit(event: FormSubmitEvent<Step1Schema>) {
 }
 
 // --- Step 2: Verify old email code ---
-const step2Schema = v.object({
-  code: v.pipe(v.string(), v.regex(/^\d{6}$/, 'Must be a 6-digit code'))
-})
+const step2Code = ref<string[]>([])
+const step2Disabled = ref(false)
 
-type Step2Schema = v.InferOutput<typeof step2Schema>
-
-const step2State = reactive({
-  code: ''
-})
-
-async function onStep2Submit(event: FormSubmitEvent<Step2Schema>) {
+async function onStep2Complete(code: string) {
+  step2Disabled.value = true
   loading.value = true
   errorMessage.value = ''
 
@@ -86,17 +81,18 @@ async function onStep2Submit(event: FormSubmitEvent<Step2Schema>) {
         Authorization: `Bearer ${sessionState.value.session.accessToken}`,
         Session: sessionState.value.session.sessionId
       },
-      body: {
-        code: event.data.code
-      }
+      body: { code }
     })
 
     toast.add({ title: 'Verification code sent', description: 'A 6-digit code has been sent to your new email address.', color: 'success' })
     step.value = 3
     errorMessage.value = ''
     loading.value = false
+    step2Disabled.value = false
   } catch (e: any) {
     const error = e as any
+    step2Code.value = []
+    step2Disabled.value = false
     if (error.data?.error) {
       errorMessage.value = error.data.error
     } else {
@@ -107,17 +103,11 @@ async function onStep2Submit(event: FormSubmitEvent<Step2Schema>) {
 }
 
 // --- Step 3: Verify new email code ---
-const step3Schema = v.object({
-  code: v.pipe(v.string(), v.regex(/^\d{6}$/, 'Must be a 6-digit code'))
-})
+const step3Code = ref<string[]>([])
+const step3Disabled = ref(false)
 
-type Step3Schema = v.InferOutput<typeof step3Schema>
-
-const step3State = reactive({
-  code: ''
-})
-
-async function onStep3Submit(event: FormSubmitEvent<Step3Schema>) {
+async function onStep3Complete(code: string) {
+  step3Disabled.value = true
   loading.value = true
   errorMessage.value = ''
 
@@ -129,7 +119,7 @@ async function onStep3Submit(event: FormSubmitEvent<Step3Schema>) {
         Session: sessionState.value.session.sessionId
       },
       body: {
-        code: event.data.code,
+        code,
         newEmail: newEmail.value
       }
     })
@@ -139,6 +129,8 @@ async function onStep3Submit(event: FormSubmitEvent<Step3Schema>) {
     closeModal()
   } catch (e: any) {
     const error = e as any
+    step3Code.value = []
+    step3Disabled.value = false
     if (error.data?.error) {
       errorMessage.value = error.data.error
     } else {
@@ -150,6 +142,10 @@ async function onStep3Submit(event: FormSubmitEvent<Step3Schema>) {
 
 function goBack() {
   errorMessage.value = ''
+  step2Code.value = []
+  step3Code.value = []
+  step2Disabled.value = false
+  step3Disabled.value = false
   if (step.value === 2) {
     step.value = 1
   } else if (step.value === 3) {
@@ -165,8 +161,10 @@ function closeModal() {
   loading.value = false
   step1State.newEmail = ''
   step1State.password = ''
-  step2State.code = ''
-  step3State.code = ''
+  step2Code.value = []
+  step3Code.value = []
+  step2Disabled.value = false
+  step3Disabled.value = false
 }
 </script>
 
@@ -204,38 +202,32 @@ function closeModal() {
 
           <!-- Step 2: Verify old email code -->
           <div v-if="step === 2" class="flex flex-col gap-4">
-            <p class="text-muted text-sm">Enter the 6-digit code sent to <strong>{{ sessionState.value.user.email }}</strong>.</p>
+            <p class="text-muted text-sm">Enter the 6-digit code sent to <strong>{{ currentEmail }}</strong>.</p>
 
-            <UForm :schema="step2Schema" :state="step2State" @submit="onStep2Submit" class="flex flex-col gap-4">
-              <UFormField label="Verification Code" name="code">
-                <UInput v-model="step2State.code" class="w-full" size="xl" maxlength="6" placeholder="000000" />
-              </UFormField>
+            <div class="flex justify-center my-4">
+              <UPinInput v-model="step2Code" :disabled="step2Disabled" @complete="onStep2Complete" otp length="6" size="xl" type="number" autofocus />
+            </div>
 
-              <p v-if="errorMessage" class="text-error text-sm">{{ errorMessage }}</p>
+            <p v-if="errorMessage" class="text-error text-sm text-center">{{ errorMessage }}</p>
 
-              <div class="flex gap-2">
-                <UButton @click="goBack" label="Back" color="neutral" variant="outline" />
-                <UButton type="submit" label="Verify Code" :loading="loading" class="flex-1" />
-              </div>
-            </UForm>
+            <div class="flex gap-2">
+              <UButton @click="goBack" label="Back" color="neutral" variant="outline" />
+            </div>
           </div>
 
           <!-- Step 3: Verify new email code -->
           <div v-if="step === 3" class="flex flex-col gap-4">
             <p class="text-muted text-sm">Enter the 6-digit code sent to <strong>{{ newEmail }}</strong>.</p>
 
-            <UForm :schema="step3Schema" :state="step3State" @submit="onStep3Submit" class="flex flex-col gap-4">
-              <UFormField label="Verification Code" name="code">
-                <UInput v-model="step3State.code" class="w-full" size="xl" maxlength="6" placeholder="000000" />
-              </UFormField>
+            <div class="flex justify-center my-4">
+              <UPinInput v-model="step3Code" :disabled="step3Disabled" @complete="onStep3Complete" otp length="6" size="xl" type="number" autofocus />
+            </div>
 
-              <p v-if="errorMessage" class="text-error text-sm">{{ errorMessage }}</p>
+            <p v-if="errorMessage" class="text-error text-sm text-center">{{ errorMessage }}</p>
 
-              <div class="flex gap-2">
-                <UButton @click="goBack" label="Back" color="neutral" variant="outline" />
-                <UButton type="submit" label="Confirm Email Change" :loading="loading" class="flex-1" />
-              </div>
-            </UForm>
+            <div class="flex gap-2">
+              <UButton @click="goBack" label="Back" color="neutral" variant="outline" />
+            </div>
           </div>
         </template>
       </UCard>

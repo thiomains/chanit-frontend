@@ -58,17 +58,23 @@ async function requestDeletionCode() {
 
 // --- Phase 2: Code + Final Confirmation ---
 const phase2Schema = v.object({
-  code: v.pipe(v.string(), v.regex(/^\d{6}$/, 'Must be a 6-digit code')),
   password: v.pipe(v.string(), v.minLength(1, 'Password is required'))
 })
 
 const phase2State = reactive({
-  code: '',
   password: '',
   confirmed: false
 })
 
+const phase2Code = ref<string[]>([])
+
 async function confirmDeletion() {
+  const code = phase2Code.value.join('')
+  if (code.length !== 6) {
+    errorMessage.value = 'Please enter the 6-digit deletion code'
+    return
+  }
+
   if (!phase2State.confirmed) {
     errorMessage.value = 'You must confirm this action'
     return
@@ -92,7 +98,7 @@ async function confirmDeletion() {
       },
       body: {
         password: phase2State.password,
-        code: phase2State.code
+        code
       }
     })
 
@@ -120,7 +126,7 @@ function closeModal() {
   phase.value = 1
   errorMessage.value = ''
   phase1State.password = ''
-  phase2State.code = ''
+  phase2Code.value = []
   phase2State.password = ''
   phase2State.confirmed = false
 }
@@ -168,9 +174,8 @@ function closeModal() {
           <div v-if="phase === 2" class="flex flex-col gap-4">
             <p class="text-muted text-sm">Enter the 6-digit deletion code sent to your email address.</p>
 
-            <div>
-              <p class="text-sm text-muted mb-1">Deletion Code</p>
-              <UInput v-model="phase2State.code" class="w-full" size="xl" maxlength="6" placeholder="000000" />
+            <div class="flex justify-center my-2">
+              <UPinInput v-model="phase2Code" otp length="6" size="xl" type="number" autofocus />
             </div>
 
             <div>
