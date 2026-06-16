@@ -66,7 +66,7 @@ const phase2State = reactive({
   confirmed: false
 })
 
-const phase2Code = ref<string[]>([])
+const phase2Code = ref<number[]>([])
 
 async function confirmDeletion() {
   const code = phase2Code.value.join('')

@@ -66,10 +66,11 @@ async function onStep1Submit(event: FormSubmitEvent<Step1Schema>) {
 }
 
 // --- Step 2: Verify old email code ---
-const step2Code = ref<string[]>([])
+const step2Code = ref<number[]>([])
 const step2Disabled = ref(false)
 
-async function onStep2Complete(code: string) {
+async function onStep2Complete(value: number[]) {
+  const code = value.join('')
   step2Disabled.value = true
   loading.value = true
   errorMessage.value = ''
@@ -103,10 +104,11 @@ async function onStep2Complete(code: string) {
 }
 
 // --- Step 3: Verify new email code ---
-const step3Code = ref<string[]>([])
+const step3Code = ref<number[]>([])
 const step3Disabled = ref(false)
 
-async function onStep3Complete(code: string) {
+async function onStep3Complete(value: number[]) {
+  const code = value.join('')
   step3Disabled.value = true
   loading.value = true
   errorMessage.value = ''

@@ -58,14 +58,18 @@ function handleIncomingMessage(msg: any) {
   const index = data.value.findIndex(c => c.channelId === receivedMessage.channelId)
   if (index !== -1) {
     // Update existing channel: move to top with new lastMessage
-    const channel: RecentChannel = { ...data.value[index] }
-    channel.lastMessage = {
-      channelId: receivedMessage.channelId,
-      createdAt: receivedMessage.createdAt,
-      messageId: receivedMessage.messageId,
-      body: receivedMessage.body,
-      author: {
-        username: receivedMessage.author?.username || ''
+    const source = data.value[index]
+    const channel: RecentChannel = {
+      channelId: source.channelId,
+      directMessageChannel: source.directMessageChannel,
+      lastMessage: {
+        channelId: receivedMessage.channelId,
+        createdAt: receivedMessage.createdAt,
+        messageId: receivedMessage.messageId,
+        body: receivedMessage.body,
+        author: {
+          username: receivedMessage.author?.username || ''
+        }
       }
     }
     data.value.splice(index, 1)
