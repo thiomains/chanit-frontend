@@ -110,6 +110,15 @@ onUnmounted(() => {
 })
 
 function onGlobalKeydown(event) {
+  // Escape: cancel reply if active and not typing
+  if (event.key === 'Escape' && replyToMessage.value) {
+    const el = document.activeElement
+    const isTextarea = el?.tagName?.toLowerCase() === 'textarea'
+    if (!isTextarea || el.value === '') {
+      cancelReply()
+      return
+    }
+  }
   // Ctrl+V: focus input so paste goes there
   if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
     inputComponentRef.value?.focusTextarea()
@@ -316,6 +325,7 @@ function onReplyClick(message) {
   replyToMessage.value = message
   nextTick(() => {
     inputComponentRef.value?.focusTextarea()
+    document.getElementById('msg-' + message.messageId)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   })
 }
 
@@ -357,6 +367,7 @@ function cancelReply() {
             :grouped="isGrouped(message, displayedMessages[i-1])"
             :message="message"
             :in-thread-view="inThreadView"
+            :highlighted="replyToMessage?.messageId === message.messageId"
             @thread-click="enterThreadView"
             @reply-click="onReplyClick"
             @mention-user="onMentionUser"
