@@ -346,11 +346,13 @@ function cancelReply() {
         <div class="flex items-center gap-2">
           <UAvatar src="https://images.dog.ceo/breeds/puggle/IMG_075018.jpg" />
           <p class="font-bold">{{ channelName }}</p>
-          <div v-if="inThreadView" class="flex items-center gap-2 ml-auto">
-            <UIcon name="material-symbols:forum" class="size-5 text-dimmed" />
-            <span class="text-dimmed text-sm">Thread</span>
-            <UButton icon="material-symbols:close" variant="ghost" color="neutral" size="xs" @click="exitThreadView" />
-          </div>
+        </div>
+      </UCard>
+      <UCard v-if="inThreadView" variant="soft" :ui="{ body: 'py-2 px-4' }" class="mt-1 border-s-4 border-s-[var(--ui-primary)]">
+        <div class="flex items-center gap-2">
+          <UIcon name="material-symbols:forum" class="size-5 text-[var(--ui-primary)]" />
+          <span class="font-medium">Thread</span>
+          <UButton icon="material-symbols:close" variant="ghost" color="neutral" size="xs" class="ml-auto" @click="exitThreadView" />
         </div>
       </UCard>
       <div class="flex-1 overflow-y-scroll flex flex-col" ref="messagesContainer" @scroll="handleScroll">

@@ -1,7 +1,7 @@
 <script setup>
 import MessageAttachmentsComponent from "~/components/MessageAttachmentsComponent.vue";
 
-const props = defineProps(["message", "grouped", "inThreadView"])
+const props = defineProps(["message", "grouped", "inThreadView", "highlighted"])
 const emit = defineEmits(["thread-click", "reply-click", "mention-user"])
 const message = ref(props.message)
 const grouped = ref(props.grouped)
@@ -28,7 +28,11 @@ const replyIndicatorText = computed(() => {
 <template>
   <div class="group">
     <MessageContextMenuComponent :message="message" @reply="$emit('reply-click', $event)" @mention-user="(username) => $emit('mention-user', username)">
-      <div class="hover:bg-[var(--ui-bg-muted)] py-0.5 px-4" :class="{ 'mt-4': !grouped }">
+      <div
+        :id="'msg-' + message.messageId"
+        class="hover:bg-[var(--ui-bg-muted)] py-0.5 px-4 transition-colors"
+        :class="{ 'mt-4': !grouped, 'bg-[var(--ui-bg-accented)]': props.highlighted }"
+      >
         <div
           v-if="message.replyTo && !props.inThreadView"
           class="flex items-center gap-1 cursor-pointer hover:underline text-dimmed mb-0.5 pl-14"

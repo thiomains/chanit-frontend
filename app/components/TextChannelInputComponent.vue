@@ -181,47 +181,58 @@ defineExpose({ insertAtCursor, focusTextarea })
 </script>
 
 <template>
-  <div class="h-4 px-6 mt-2">
-    <p v-if="showTyping" ><b class="font-bold">{{ typingUser }}</b> is typing...</p>
-  </div>
-  <div v-if="props.replyTo && !props.inThreadView" class="flex items-center gap-2 px-6 pt-2">
-    <UIcon name="material-symbols:reply" class="size-4 text-dimmed" />
-    <span class="text-sm text-dimmed">Replying to <strong>@{{ props.replyTo.author.username }}</strong></span>
-    <UButton icon="material-symbols:close" variant="ghost" color="neutral" size="xs" class="ml-auto" @click="$emit('cancel-reply')" />
-  </div>
-  <div class="p-4">
-    <UCollapsible :open="attachmentCollapsible" :unmount-on-hide="false">
-      <template #content>
-        <UFileUpload
-            v-model="attachments"
-            @update:modelValue="attachmentsUpdate"
-            class="mx-4 mb-4"
-            label="Drop your files here"
-            description="Any files (max. 75MB)"
-            layout="list"
-            multiple
-        />
-      </template>
-    </UCollapsible>
-    <UTextarea
-        ref="textareaRef"
-        @paste="handlePaste"
-        @input="sendTyping"
-        @keydown.enter="enterPressed"
-        class="w-full min-h-14"
-        v-model="messageInput"
-        placeholder="Type a message..."
-        size="xl"
-        :ui="{ leading: 'ps-1' }"
-        autofocus
-        autoresize
-        :maxrows="10"
-        :rows="1"
+  <div class="mt-3">
+    <div class="h-4 px-3 mt-1">
+      <p v-if="showTyping"><b class="font-bold">{{ typingUser }}</b> is typing...</p>
+    </div>
+    <Transition
+      enter-active-class="transition-all duration-300 ease-out"
+      enter-from-class="max-h-0 opacity-0"
+      enter-to-class="max-h-10 opacity-100"
+      leave-active-class="transition-all duration-300 ease-in"
+      leave-from-class="max-h-10 opacity-100"
+      leave-to-class="max-h-0 opacity-0"
     >
-      <template #leading>
-        <UButton @click="toggleAttachmentCollapsible" icon="material-symbols:add-circle-rounded" variant="link" color="neutral" size="xl" class="mt-auto" />
-      </template>
-    </UTextarea>
+      <div v-if="props.replyTo && !props.inThreadView" class="flex items-center gap-2 px-3 overflow-hidden">
+        <UIcon name="material-symbols:reply" class="size-4 text-dimmed shrink-0" />
+        <span class="text-sm text-dimmed truncate">Replying to <strong>@{{ props.replyTo.author.username }}</strong></span>
+        <UButton icon="material-symbols:close" variant="ghost" color="neutral" size="xs" class="ml-auto shrink-0" @click="$emit('cancel-reply')" />
+      </div>
+    </Transition>
+    <div class="px-3 pb-2 pt-0">
+      <UCollapsible :open="attachmentCollapsible" :unmount-on-hide="false">
+        <template #content>
+          <UFileUpload
+              v-model="attachments"
+              @update:modelValue="attachmentsUpdate"
+              class="mx-4 mb-4"
+              label="Drop your files here"
+              description="Any files (max. 75MB)"
+              layout="list"
+              multiple
+          />
+        </template>
+      </UCollapsible>
+      <UTextarea
+          ref="textareaRef"
+          @paste="handlePaste"
+          @input="sendTyping"
+          @keydown.enter="enterPressed"
+          class="w-full min-h-14"
+          v-model="messageInput"
+          placeholder="Type a message..."
+          size="xl"
+          :ui="{ leading: 'ps-1' }"
+          autofocus
+          autoresize
+          :maxrows="10"
+          :rows="1"
+      >
+        <template #leading>
+          <UButton @click="toggleAttachmentCollapsible" icon="material-symbols:add-circle-rounded" variant="link" color="neutral" size="xl" class="mt-auto" />
+        </template>
+      </UTextarea>
+    </div>
   </div>
   <UModal
     v-model:open="tooManyFiles"
