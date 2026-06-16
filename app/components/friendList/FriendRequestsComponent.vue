@@ -46,6 +46,15 @@ onMounted(() => {
   loadFriendRequests()
 })
 
+function bioText(bio: string) {
+  if (!bio) return ''
+  return bio
+    .replace(/[*_~`#>|\\]/g, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 async function cancelRequest(request: FriendRequest) {
   const session = sessionState.value as any
   let userId = request.sender.userId
@@ -89,10 +98,10 @@ async function acceptRequest(request: FriendRequest) {
       <div v-for="request in incoming" :key="request.sender.userId">
         <USeparator/>
         <div class="items-center p-2 py-4 flex gap-2 transition-colors hover:bg-muted rounded-lg">
-          <UAvatar src="https://images.dog.ceo/breeds/dingo/n02115641_1380.jpg" size="3xl"/>
+          <UAvatar :src="request.sender.profilePictureUrl + '?size=48'" size="3xl"/>
           <div class="flex flex-col flex-1">
             <p class="font-bold">{{ request.sender.username }}</p>
-            <p class="text-[var(--ui-text-muted)]">Online</p>
+            <p class="text-[var(--ui-text-muted)] truncate">{{ bioText(request.sender.bio) }}</p>
           </div>
           <UFieldGroup size="lg">
             <UTooltip :delay-duration="0" text="Accept">
@@ -112,10 +121,10 @@ async function acceptRequest(request: FriendRequest) {
       <div v-for="request in outgoing" :key="request.sender.userId">
         <USeparator/>
         <div class="items-center p-2 py-4 flex gap-2 transition-colors hover:bg-muted rounded-lg">
-          <UAvatar src="https://images.dog.ceo/breeds/dingo/n02115641_1380.jpg" size="3xl"/>
+          <UAvatar :src="request.recipient.profilePictureUrl + '?size=48'" size="3xl"/>
           <div class="flex flex-col flex-1">
             <p class="font-bold">{{ request.recipient.username }}</p>
-            <p class="text-[var(--ui-text-muted)]">Online</p>
+            <p class="text-[var(--ui-text-muted)] truncate">{{ bioText(request.recipient.bio) }}</p>
           </div>
           <UFieldGroup size="lg">
             <UTooltip :delay-duration="0" text="Cancel">
