@@ -1,14 +1,6 @@
-# --- Base Stage ---
-FROM node:22.18.0 AS base
-
-# Verzeichnisstruktur vorbereiten
-WORKDIR /app
-
-# Pakete installieren mit stabiler npm Version (optional)
-RUN npm install -g npm@10.8.2
-
 # --- Dependencies Stage ---
-FROM base AS deps
+FROM node:22.18.0 AS deps
+WORKDIR /app
 
 # package.json und lockfile separat für Caching
 COPY package*.json ./
@@ -18,7 +10,10 @@ RUN rm -rf node_modules package-lock.json \
  && npm install
 
 # --- Build Stage ---
-FROM base AS build
+FROM node:22.18.0 AS build
+WORKDIR /app
+
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules

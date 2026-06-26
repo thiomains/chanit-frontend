@@ -1,0 +1,37 @@
+# Dependencies
+node_modules
+
+# Nuxt
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Git
+.git
+.gitignore
+
+# Logs
+logs
+*.log
+
+# IDE
+.idea
+.fleet
+.vscode
+.DS_Store
+
+# Env (wird via Coolify injected)
+.env
+.env.*
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Misc
+*.md
+LICENSE
