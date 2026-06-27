@@ -31,5 +31,13 @@ export function useAdminApi() {
         })
     }
 
-    return { get, post }
+    async function del(path: string, options?: Record<string, any>) {
+        return await $fetch(config.public.apiBaseUrl + path, {
+            method: 'DELETE',
+            headers: headers(),
+            ...options,
+        })
+    }
+
+    return { get, post, del }
 }

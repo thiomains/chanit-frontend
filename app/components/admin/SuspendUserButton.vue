@@ -66,7 +66,7 @@ function onCancel() {
             @click="showModal = true"
         />
 
-        <ConfirmDataAccessModal
+        <AdminConfirmDataAccessModal
             v-model:open="showModal"
             :field-label="`${buttonLabel} user ${props.username}`"
             @confirm="onConfirm"

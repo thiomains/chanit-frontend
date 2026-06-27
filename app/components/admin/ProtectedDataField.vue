@@ -42,22 +42,18 @@ function onCancel() {
 
 <template>
     <div>
-        <div v-if="!revealed && canAccess" class="flex items-center gap-2 py-2">
-            <UIcon name="material-symbols:lock-outline" size="20" class="text-muted" />
-            <span class="text-muted italic">{{ label }} is protected</span>
-            <UButton variant="subtle" size="xs" :loading="loading" @click="showModal = true">
-                Reveal
-            </UButton>
-        </div>
-        <div v-else-if="!revealed && !canAccess" class="flex items-center gap-2 py-2">
-            <UIcon name="material-symbols:lock-outline" size="20" class="text-muted" />
-            <span class="text-muted italic">No permission to view {{ label }}</span>
-        </div>
-        <div v-else>
-            <slot :data="data" />
-        </div>
+        <UButton
+            v-if="!revealed && canAccess"
+            variant="subtle"
+            size="xs"
+            :loading="loading"
+            @click="showModal = true"
+        >
+            Reveal
+        </UButton>
+        <slot v-else-if="revealed" :data="data" />
 
-        <ConfirmDataAccessModal
+        <AdminConfirmDataAccessModal
             v-model:open="showModal"
             :field-label="label"
             @confirm="onConfirm"

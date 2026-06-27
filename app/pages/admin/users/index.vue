@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, h, resolveComponent } from 'vue'
 
 definePageMeta({
   layout: 'admin'
@@ -8,12 +8,12 @@ definePageMeta({
 const api = useAdminApi()
 const adminPerms = useAdminPermissions()
 
-const SuspendUserButton = resolveComponent('SuspendUserButton')
-const UIcon = resolveComponent('UIcon')
-const UButton = resolveComponent('UButton')
+const UAvatar = resolveComponent('UAvatar')
+const UBadge = resolveComponent('UBadge')
 
 const users = ref<any[]>([])
 const data = ref<any[]>([])
+const globalFilter = ref('')
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
@@ -44,95 +44,66 @@ function onSearchInput() {
   }, 300)
 }
 
-const columns = computed(() => {
-  const cols: any[] = [
-    {
-      accessorKey: 'id',
-      header: 'ID'
-    },
-    {
-      accessorKey: 'profile.profilePictureUrl',
-      header: '',
-      cell: ({ row }: any) => {
-        const imgUrl = row.original?.profile?.profilePictureUrl
-        return h('div', { innerHTML: '<img class=\'h-[42px]\' src=\'' + imgUrl + '?size=42\'>' })
-      }
-    },
-    {
-      accessorKey: 'profile.username',
-      header: 'Profile Name'
-    },
-    {
-      accessorKey: 'username',
-      header: 'Login Name'
-    },
-  ]
+const columns = computed(() => [
+  {
+    accessorKey: 'profile',
+    header: 'Profile',
+    cell: ({ row }: any) => {
+      const u = row.original
+      const displayName = u.profile?.username || u.username
+      const avatarUrl = u.profile?.profilePictureUrl
+      const isInactive = !u.active
+      const isUnverified = !u.emailVerified
 
-  if (adminPerms.has('viewEmail')) {
-    cols.push({
-      accessorKey: 'email',
-      header: 'Email'
-    })
-  }
+      return h('div', { class: 'flex items-center gap-3 w-full min-w-0' }, [
+        h(UAvatar, { src: avatarUrl ? avatarUrl + '?size=42' : undefined, size: 'md' }),
+        h('div', { class: 'flex flex-col min-w-0' }, [
+          h('span', { class: 'font-medium truncate' }, displayName),
+          h('span', { class: 'text-sm text-muted truncate' }, '@' + u.username),
+        ]),
+        ...(isInactive
+          ? [h(UBadge, { color: 'error', variant: 'subtle', class: 'shrink-0' }, () => 'Inactive')]
+          : []),
+        ...(isUnverified
+          ? [h(UBadge, { color: 'warning', variant: 'subtle', class: 'shrink-0' }, () => 'Unverified')]
+          : []),
+      ])
+    },
+    meta: { class: { td: 'w-full' } },
+  },
+  {
+    accessorKey: 'createdAt',
+    header: 'Created',
+    cell: ({ row }: any) => new Date(row.getValue('createdAt')).toLocaleString(),
+    meta: { class: { th: 'text-right', td: 'text-right text-muted text-sm whitespace-nowrap' } },
+  },
+])
 
-  cols.push(
-    {
-      accessorKey: 'emailVerified',
-      header: 'Verified',
-      cell: ({ row }: any) => {
-        const v = row.original.emailVerified
-        return h(UIcon, { name: v ? 'material-symbols:check' : 'material-symbols:close', size: '24', class: v ? 'text-neutral' : 'text-error' })
-      }
-    },
-    {
-      accessorKey: 'active',
-      header: 'Active',
-      cell: ({ row }: any) => {
-        const a = row.original.active
-        return h(UIcon, { name: a ? 'material-symbols:check' : 'material-symbols:close', size: '24', class: a ? 'text-neutral' : 'text-error' })
-      }
-    },
-    {
-      accessorKey: 'createdAt',
-      header: 'Created',
-      cell: ({ row }: any) => new Date(row.getValue('createdAt')).toLocaleString()
-    },
-    {
-      id: 'actions',
-      cell: ({ row }: any) => {
-        const original = row.original
-        const path = '/admin/users/' + original.id
-        return h('div', { class: 'flex items-center gap-1 justify-end' },
-          h(SuspendUserButton, {
-            userId: original.id,
-            active: original.active,
-            username: original.profile?.username || original.username,
-            onUpdated: () => refreshData(),
-          }),
-          h(UButton, { variant: 'subtle', label: 'View', to: path, size: 'xs' })
-        )
-      },
-    }
-  )
+function onRowSelect(_e: Event, row: any) {
+  navigateTo('/admin/users/' + row.original.id)
+}
 
-  return cols
+onMounted(() => {
+  refreshData()
 })
-
-const globalFilter = ref('')
-
-onMounted(() => { refreshData() })
 </script>
 
 <template>
-  <div>
-    <div class="p-2 flex gap-1">
-      <UInput v-model="globalFilter" placeholder="Search users..." @input="onSearchInput" />
+  <div class="flex flex-col h-full overflow-hidden">
+    <div class="p-2 shrink-0">
+      <UInput
+        v-model="globalFilter"
+        placeholder="Search users..."
+        @input="onSearchInput"
+      />
     </div>
+
     <UTable
-        :data="data"
-        class="flex-1"
-        :columns="columns"
-        v-model:global-filter="globalFilter"
+      :data="data"
+      :columns="columns"
+      class="flex-1 min-h-0"
+      :sticky="'header'"
+      :on-select="onRowSelect"
     />
   </div>
 </template>
