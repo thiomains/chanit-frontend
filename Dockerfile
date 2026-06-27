@@ -13,7 +13,7 @@ RUN rm -rf node_modules package-lock.json \
 FROM node:22.18.0 AS build
 WORKDIR /app
 
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
