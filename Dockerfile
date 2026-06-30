@@ -5,7 +5,7 @@ WORKDIR /app
 # package.json und lockfile separat für Caching
 COPY package*.json ./
 
-RUN npm ci
+RUN npm install
 
 # --- Build Stage ---
 FROM node:22.18.0 AS build
