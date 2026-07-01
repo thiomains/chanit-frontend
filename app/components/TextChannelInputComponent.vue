@@ -20,6 +20,8 @@ const props = defineProps({
 let messageInput = ref("")
 const textareaRef = ref()
 
+const textareaElement = computed(() => getTextareaEl())
+
 function getTextareaEl() {
   return textareaRef.value?.$el?.querySelector?.('textarea') ?? textareaRef.value?.$el
 }
@@ -178,6 +180,17 @@ function handlePaste(event) {
   }
 }
 
+function onEmojiAutocompleteSelect({ emoji, start, end }) {
+  const el = getTextareaEl()
+  if (el instanceof HTMLTextAreaElement) {
+    messageInput.value = messageInput.value.substring(0, start) + emoji + messageInput.value.substring(end)
+    nextTick(() => {
+      el.selectionStart = el.selectionEnd = start + emoji.length
+      el.focus()
+    })
+  }
+}
+
 defineExpose({ insertAtCursor, focusTextarea })
 </script>
 
@@ -232,7 +245,15 @@ defineExpose({ insertAtCursor, focusTextarea })
         <template #leading>
           <UButton @click="toggleAttachmentCollapsible" icon="material-symbols:add-circle-rounded" variant="link" color="neutral" size="xl" class="mt-auto" />
         </template>
+        <template #trailing>
+          <EmojiPickerComponent :on-select="insertAtCursor" />
+        </template>
       </UTextarea>
+      <EmojiAutocompleteComponent
+        :textarea-el="textareaElement"
+        :model-value="messageInput"
+        @select="onEmojiAutocompleteSelect"
+      />
     </div>
   </div>
   <UModal
